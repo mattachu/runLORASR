@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.08
- Modified:       2017.08.11
- Version:        0.4.0.28
+ Modified:       2017.08.25
+ Version:        0.4.0.30
 
  Script Function:
 	Work through a batch of input files and run LORASR for each one
@@ -19,10 +19,11 @@
 #include "runLORASR.Functions.au3"
 #include "runLORASR.Sweep.au3"
 #include "runLORASR.Run.au3"
+#include "runLORASR.Results.au3"
 #include "runLORASR.Plots.au3"
 #include "runLORASR.Tidy.au3"
 
-LogMessage("Loaded runLORASR.Batch version 0.4.0.28", 3)
+LogMessage("Loaded runLORASR.Batch version 0.4.0.30", 3)
 
 ; Main function
 Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program Files (x86)\LORASR", $sSimulationProgram = "LORASR.exe", $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sPlotFile = "Plots.xlsx", $sInputFolder = "Input", $sOutputFolder = "Output", $sRunFolder = "Runs", $sIncompleteFolder = "Incomplete", $bCleanup = True)
@@ -143,7 +144,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
 		; Save run results to output file
 		LogMessage("Saving run " & $sRun & " to batch results output file...", 2, "BatchLORASR")
-		$iResult = SaveResults($sRun, $sResultsFile, $sWorkingDirectory)
+		$iResult = SaveRunResults($sRun, $sWorkingDirectory, $sResultsFile)
 		If (Not $iResult) Or @error Then
 			; Log failure and continue
 			ThrowError("Error saving run " & $sRun & " to batch results output file.", 2, "BatchLORASR", @error)
@@ -292,114 +293,5 @@ Func RunSweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx"
 
 	; Shouldn't get here
 	Return 0
-
-EndFunc
-
-; Function to write run results to output file
-Func SaveResults($sRun, $sResultsFile = "Batch results.csv", $sWorkingDirectory = @WorkingDir)
-	LogMessage("Called SaveResults($sRun = " & $sRun & ", $sResultsFile = " & $sResultsFile & ", $sWorkingDirectory = " & $sWorkingDirectory & ")", 5)
-
-	; Declarations
-	Local $asOutputFiles, $asOutputData, $asRunDetails
-	Local $sCurrentOutputFile = "", $sTransmission = "", $sRunDate = "", $sRunTime = ""
-	Local $iCurrentLine = 0, $iRunDetails = 0, $iCurrentDetail = 0
-	Local $hResultsFile = 0
-
-	; Get list of output files for current run
-	LogMessage("Searching for output files for run " & $sRun, 4, "SaveResults")
-	$asOutputFiles = _FileListToArray($sWorkingDirectory, $sRun & "-*.out")
-	If (UBound($asOutputFiles) = 0) Or @error Then
-		ThrowError("Error getting list of output files for run " & $sRun, 2, "SaveResults", @error)
-		SetError(1)
-		Return 0
-	EndIf
-
-	; Read in output file
-	$sCurrentOutputFile = $asOutputFiles[UBound($asOutputFiles)-1] ; reads most recent file, assuming files are sorted by date and time based on filename
-	LogMessage("Reading output file " & $sCurrentOutputFile, 4, "SaveResults")
-	$asOutputData = FileReadToArray($sCurrentOutputFile)
-	If (UBound($asOutputData) = 0) Or @error Then
-		ThrowError("Error loading data from output file " & $sCurrentOutputFile, 2, "SaveResults", @error)
-		SetError(2)
-		Return 0
-	EndIf
-
-	; Find transmission data
-	LogMessage("Loading transmission results", 4, "SaveResults")
-	$iCurrentLine = 0
-	Do
-		$iCurrentLine += 1
-	Until StringLeft($asOutputData[$iCurrentLine],41) = "COMMON CORE-PART. OF INVESTIG. PLANES/%= "
-	$sTransmission = StringTrimLeft($asOutputData[$iCurrentLine], 42)
-	If (Not $sTransmission) Or @error Then
-		ThrowError("Error reading transmission data from output file " & $sCurrentOutputFile, 2, "SaveResults", @error)
-		SetError(3)
-		Return 0
-	EndIf
-
-	; File details
-	LogMessage("Loading run details", 4, "SaveResults")
-	$asRunDetails = StringSplit($sCurrentOutputFile, "-")
-	$iRunDetails = UBound($asRunDetails) - 1
-	$sRunDate = $asRunDetails[$iRunDetails - 1]
-	$sRunTime = StringTrimRight($asRunDetails[$iRunDetails],4)
-	If (Not $sRunDate) Or (Not $sRunTime) Or @error Then
-		ThrowError("Error reading date and time details from output file " & $sCurrentOutputFile, 2, "SaveResults", @error)
-		SetError(4)
-		Return 0
-	EndIf
-
-	; Open results file
-	$hResultsFile = FileOpen($sResultsFile, $FO_APPEND)
-	If (Not $hResultsFile) Or @error Then
-		ThrowError("Error opening batch results file " & $sResultsFile, 2, "SaveResults", @error)
-		SetError(5)
-		Return 0
-	EndIf
-
-	; Write out data to CSV
-	LogMessage("Writing results to file " & $sResultsFile, 3, "SaveResults")
-	$iResult = FileWrite($hResultsFile, $sRunDate & ", " & $sRunTime & ", " & $sTransmission)
-	If (Not $iResult) Or @error Then
-		ThrowError("Error writing to batch results file " & $sResultsFile, 2, "SaveResults", @error)
-		FileWrite($hResultsFile, @CRLF)
-		FileClose($hResultsFile)
-		SetError(6)
-		Return 0
-	EndIf
-
-	; Write out additional run details based on filename
-	$iCurrentDetail = 1
-	While $iCurrentDetail < $iRunDetails - 1
-		$iResult = FileWrite($hResultsFile, ", " & $asRunDetails[$iCurrentDetail])
-		If (Not $iResult) Or @error Then
-			ThrowError("Error writing to batch results file " & $sResultsFile, 2, "SaveResults", @error)
-			FileWrite($hResultsFile, @CRLF)
-			FileClose($hResultsFile)
-			SetError(7)
-			Return 0
-		EndIf
-		$iCurrentDetail += 1
-	WEnd
-
-	; Next line for next run
-	$iResult = FileWrite($hResultsFile, @CRLF)
-	If (Not $iResult) Or @error Then
-		ThrowError("Error writing to batch results file " & $sResultsFile, 2, "SaveResults", @error)
-		FileClose($hResultsFile)
-		SetError(8)
-		Return 0
-	EndIf
-
-	; Close results file
-	$iResult = FileClose($hResultsFile)
-	If (Not $iResult) Or @error Then
-		ThrowError("Error closing batch results file " & $sResultsFile, 2, "SaveResults", @error)
-		SetError(9)
-		Return 0
-	EndIf
-
-	; Exit
-	Return (Not @error)
 
 EndFunc

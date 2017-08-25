@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.07
- Modified:       2017.08.11
- Version:        0.4.0.74
+ Modified:       2017.08.25
+ Version:        0.4.0.75
 
  Script Function:
 	Create a batch of input files from a batch definition file and a template
@@ -14,12 +14,13 @@
 
 #include-once
 #include "runLORASR.Functions.au3"
+#include "runLORASR.Results.au3"
 #include <Array.au3>
 #include <Excel.au3>
 #include <File.au3>
 #include <FileConstants.au3>
 
-LogMessage("Loaded runLORASR.Sweep version 0.4.0.74", 3)
+LogMessage("Loaded runLORASR.Sweep version 0.4.0.75", 3)
 
 ; Main function
 Func SweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sInputFolder = "Input")
@@ -289,65 +290,6 @@ Func SweepParameter($asParameters, $asValues, $iParameter = 0, $sWorkingDirector
 			EndIf
 			LogMessage("Deleted base file " & $sBaseFile, 3, "SweepParameter")
 		Next ; $sBaseFile
-	EndIf
-
-	; Exit
-	Return (Not @error)
-
-EndFunc
-
-; Function to create results file to store the transmission results for each set of values in the parameter sweep
-Func CreateResultsFile($asParameters, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Batch results.csv")
-	LogMessage("Called CreateResultsFile($asParameters = <array>, $sWorkingDirectory = " & $sWorkingDirectory & ", $sResultsFile = " & $sResultsFile & ")", 5)
-
-	; Declarations
-	Local $hResultsFile = 0
-	Local $sHeader = ""
-	Local $iParameter = 0
-
-	; Backup existing results file
-	If FileExists($sWorkingDirectory & "\" & $sResultsFile) Then
-		FileMove($sWorkingDirectory & "\" & $sResultsFile, $sWorkingDirectory & "\" & $sResultsFile & ".old", $FC_OVERWRITE)
-		LogMessage("Backed up old results file to " & $sWorkingDirectory & "\" & $sResultsFile & ".old", 4, "CreateResultsFile")
-	EndIf
-
-	; Create new results file
-	$hResultsFile = FileOpen($sWorkingDirectory & "\" & $sResultsFile, $FO_OVERWRITE + $FO_CREATEPATH)
-	If @error Then
-		ThrowError("Error creating results file.", 3, "CreateResultsFile", @error)
-		FileClose($hResultsFile)
-		SetError(1)
-		Return 0
-	EndIf
-	LogMessage("Created new results file " & $sWorkingDirectory & "\" & $sResultsFile, 3, "CreateResultsFile")
-
-	; Basic headers
-	$sHeader = "Run date, Run time, Transmission (%)"
-
-	; Parameter sweep or standard batch run?
-	If UBound($asParameters) = 0 Then
-		; If called with $asParameters set to zero, just write a generic header line
-		$sHeader = $sHeader & ", Run name/details"
-	Else
-		; Parameter headers
-		For $iParameter = 0 To UBound($asParameters,1) - 1
-			$sHeader = $sHeader & ", " & $asParameters[$iParameter][0] & " (" & $asParameters[$iParameter][2] & ")"
-		Next ; $iParameter
-	EndIf
-
-	; Write headers
-	FileWriteLine($hResultsFile, $sHeader)
-	If @error Then
-		ThrowError("Error writing to results file.", 3, "CreateResultsFile", @error)
-		SetError(2)
-	EndIf
-
-	; Close file
-	FileClose($hResultsFile)
-	If @error Then
-		ThrowError("Error closing results file.", 4, "CreateResultsFile", @error)
-		SetError(3)
-		Return 0
 	EndIf
 
 	; Exit

@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.12
  Modified:       2017.08.25
- Version:        0.4.1.1
+ Version:        0.4.0.79
 
  Script Function:
 	Functions used by runLORASR
@@ -26,7 +26,7 @@ Global $g_sLogFile = "runLORASR.log"
 
 ; Create new log file on first open
 CreateLogFile($g_sLogFile, @WorkingDir)
-LogMessage("Loaded runLORASR.Functions version 0.4.1.1", 3)
+LogMessage("Loaded runLORASR.Functions version 0.4.0.79", 3)
 
 ; Function to read settings from runLORASR.ini file
 Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProgram, ByRef $sSweepFile, ByRef $sTemplateFile, ByRef $sResultsFile, ByRef $sPlotFile, ByRef $sInputFolder, ByRef $sOutputFolder, ByRef $sRunFolder, ByRef $sIncompleteFolder, ByRef $bCleanup)

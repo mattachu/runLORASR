@@ -1,7 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Res_Comment=Created by M J Easton
 #AutoIt3Wrapper_Res_Description=Work through a batch of input files and run LORASR for each one
-#AutoIt3Wrapper_Res_Fileversion=0.4.0.1
+#AutoIt3Wrapper_Res_Fileversion=0.4.1.1
 #AutoIt3Wrapper_Res_LegalCopyright=Creative Commons Attribution ShareAlike
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs ----------------------------------------------------------------------------
@@ -11,7 +11,7 @@
  Author:         Matt Easton
  Created:        2017.08.25
  Modified:       2017.08.25
- Version:        0.4.0.1
+ Version:        0.4.1.1
 
  Script Function:
 	Collate transmission results from a set of LORASR output files
@@ -21,7 +21,7 @@
 #include "runLORASR.Functions.au3"
 #include "runLORASR.Results.au3"
 
-LogMessage("Starting collateLORASR version 0.4.0.1", 2)
+LogMessage("Starting collateLORASR version 0.4.1.1", 2)
 
 ; Declarations
 Local $iResult = 0
@@ -55,7 +55,7 @@ LogMessage("Results folder: " & @WorkingDir, 3,  "collateLORASR")
 
 ; Call the main run function
 LogMessage("Starting collation batch...", 2,  "collateLORASR")
-$iResult = SaveAllResults(@WorkingDir, $sResultsFile, $sRunFolder)
+$iResult = SaveAllResults(@WorkingDir, $sResultsFile, $sInputFolder, $sRunFolder)
 
 ; Exit program
 If ($iResult = 1) And (Not @error) Then

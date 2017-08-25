@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.08.25
  Modified:       2017.08.25
- Version:        0.4.1.21
+ Version:        0.4.1.22
 
  Script Function:
 	Extract transmission results from LORASR output files
@@ -19,9 +19,7 @@
 #include <StringConstants.au3>
 #include "runLORASR.Functions.au3"
 
-LogMessage("Loaded runLORASR.Results version 0.4.1.21", 3)
-
-SaveAllResults()
+LogMessage("Loaded runLORASR.Results version 0.4.1.22", 3)
 
 ; Function to loop through all output files and save results
 Func SaveAllResults($sWorkingDirectory = @WorkingDir, $sResultsFile = "Batch results.csv", $sInputFolder = "Input", $sRunFolder = "Runs")

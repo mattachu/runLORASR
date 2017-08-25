@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.12
- Modified:       2017.08.11
- Version:        0.4.0.77
+ Modified:       2017.08.25
+ Version:        0.4.1.0
 
  Script Function:
 	Functions used by runLORASR
@@ -26,7 +26,7 @@ Global $g_sLogFile = "runLORASR.log"
 
 ; Create new log file on first open
 CreateLogFile($g_sLogFile, @WorkingDir)
-LogMessage("Loaded runLORASR.Functions version 0.4.0.77", 3)
+LogMessage("Loaded runLORASR.Functions version 0.4.1.0", 3)
 
 ; Function to read settings from runLORASR.ini file
 Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProgram, ByRef $sSweepFile, ByRef $sTemplateFile, ByRef $sResultsFile, ByRef $sPlotFile, ByRef $sInputFolder, ByRef $sOutputFolder, ByRef $sRunFolder, ByRef $sIncompleteFolder, ByRef $bCleanup)
@@ -268,61 +268,6 @@ Func DeleteFiles($sDeleteFileName, $sSearchFolder = @WorkingDir)
 	Next ; file
 
 	; Exit
-	Return (Not @error)
-
-EndFunc
-
-; Function to write to an output file
-Func WriteBatchResults($sText, $sResultsFile = "Batch results.csv", $sWorkingDir = @WorkingDir, $bCreateNew = False, $bBackup = False)
-	LogMessage("Called WriteBatchResults($sText = <text>, $sResultsFile = " & $sResultsFile & ", $sWorkingDir = " & $sWorkingDir & ",  $bCreateNew = " & $bCreateNew & ", $bBackup = " & $bBackup & ")", 5)
-
-	Local $hResultsFile = 0
-
-	If $bCreateNew Then
-		; Sort out existing files
-		If FileExists($sWorkingDir & "\" & $sResultsFile) Then
-			If $bBackup Then
-				If FileMove($sWorkingDir & "\" & $sResultsFile, $sWorkingDir & "\" & $sResultsFile & ".old", $FC_OVERWRITE) Then
-					LogMessage("Successfully backed up " & $sWorkingDir & "\" & $sResultsFile & ".old", 4, "WriteBatchResults")
-				Else
-					ThrowError("Failed to back up " & $sWorkingDir & "\" & $sResultsFile & ".old", 3, "WriteBatchResults", @error)
-					SetError(1)
-				EndIf
-			Else
-				If FileDelete($sWorkingDir & "\" & $sResultsFile) Then
-					LogMessage("Successfully deleted old " & $sWorkingDir & "\" & $sResultsFile, 4, "WriteBatchResults")
-				Else
-					ThrowError("Failed to delete old " & $sWorkingDir & "\" & $sResultsFile, 3, "WriteBatchResults", @error)
-					SetError(2)
-				EndIf
-			EndIf
-		EndIf
-	EndIf
-
-	; Open file
-	$hResultsFile = FileOpen($sWorkingDir & "\" & $sResultsFile, $FO_APPEND)
-	If $hResultsFile = -1 Then
-		ThrowError("Failed to open results file " & $sWorkingDir & "\" & $sResultsFile, 2, "WriteBatchResults", @error)
-		SetError(3)
-		Return 0
-	EndIf
-
-	; Write data to file
-	If Not FileWriteLine($hResultsFile, $sText) Then
-		ThrowError("Failed to write to results file " & $sWorkingDir & "\" & $sResultsFile, 2, "WriteBatchResults", @error)
-		SetError(4)
-		Return 0
-	EndIf
-
-	; Close file
-	If Not FileClose($hResultsFile) Then
-		ThrowError("Failed to close results file " & $sWorkingDir & "\" & $sResultsFile, 2, "WriteBatchResults", @error)
-		SetError(5)
-		Return 0
-	EndIf
-
-	; Exit
-	LogMessage("Writing complete.", 3, "WriteBatchResults")
 	Return (Not @error)
 
 EndFunc

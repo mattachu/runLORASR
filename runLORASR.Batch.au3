@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.08.08
  Modified:       2017.08.25
- Version:        0.4.0.30
+ Version:        0.4.1.0
 
  Script Function:
 	Work through a batch of input files and run LORASR for each one
@@ -23,7 +23,7 @@
 #include "runLORASR.Plots.au3"
 #include "runLORASR.Tidy.au3"
 
-LogMessage("Loaded runLORASR.Batch version 0.4.0.30", 3)
+LogMessage("Loaded runLORASR.Batch version 0.4.1.0", 3)
 
 ; Main function
 Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program Files (x86)\LORASR", $sSimulationProgram = "LORASR.exe", $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sPlotFile = "Plots.xlsx", $sInputFolder = "Input", $sOutputFolder = "Output", $sRunFolder = "Runs", $sIncompleteFolder = "Incomplete", $bCleanup = True)

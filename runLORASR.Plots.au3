@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.13
- Modified:       2017.08.09
- Version:        0.4.0.72
+ Modified:       2017.08.25
+ Version:        0.4.1.0
 
  Script Function:
 	Copy data from LORASR output files to Excel plotting spreadsheet
@@ -17,7 +17,7 @@
 #include <Excel.au3>
 #include <Date.au3>
 
-LogMessage("Loaded runLORASR.Plots version 0.4.0.72", 3)
+LogMessage("Loaded runLORASR.Plots version 0.4.1.0", 3)
 
 ; Function that defines input and output settings for each data type: changes to the LORASR code may require changes here.
 Func GetFileSettings($sDataType, ByRef $sDataFile1, ByRef $iDataStart1, ByRef $iDataEnd1, ByRef $sDataFile2, ByRef $iDataStart2, ByRef $iDataEnd2, ByRef $iWorksheet, ByRef $sDataLocation1, ByRef $sDataLocation2)

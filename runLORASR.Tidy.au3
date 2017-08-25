@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.13
  Modified:       2017.08.25
- Version:        0.4.0.51
+ Version:        0.4.1.0
 
  Script Function:
 	Tidy up files from a batch run of LORASR
@@ -15,7 +15,7 @@
 #include-once
 #include "runLORASR.Functions.au3"
 
-LogMessage("Loaded runLORASR.Tidy version 0.4.0.51", 3)
+LogMessage("Loaded runLORASR.Tidy version 0.4.1.0", 3)
 
 ; Tidy up files from an completed run
 Func TidyIncompleteRun($sRun, $sWorkingDirectory = @WorkingDir, $sIncompleteFolder = "Incomplete")

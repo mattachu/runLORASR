@@ -1,7 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Res_Comment=Created by M J Easton
 #AutoIt3Wrapper_Res_Description=Run LORASR for a given filename
-#AutoIt3Wrapper_Res_Fileversion=0.4.0.32
+#AutoIt3Wrapper_Res_Fileversion=0.4.1.0
 #AutoIt3Wrapper_Res_LegalCopyright=Creative Commons Attribution ShareAlike
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs ----------------------------------------------------------------------------
@@ -10,8 +10,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.04
- Modified:       2017.08.11
- Version:        0.4.0.32
+ Modified:       2017.08.25
+ Version:        0.4.1.0
 
 Script Function:
 	Run LORASR for a given filename
@@ -21,7 +21,7 @@ Script Function:
 #include "runLORASR.Functions.au3"
 #include "runLORASR.Run.au3"
 
-LogMessage("Started runLORASR version 0.4.0.32", 2)
+LogMessage("Started runLORASR version 0.4.1.0", 2)
 
 ; Declarations
 Local $iResult = 0

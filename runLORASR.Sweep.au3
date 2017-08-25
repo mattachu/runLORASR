@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.08.07
  Modified:       2017.08.25
- Version:        0.4.0.75
+ Version:        0.4.1.0
 
  Script Function:
 	Create a batch of input files from a batch definition file and a template
@@ -20,7 +20,7 @@
 #include <File.au3>
 #include <FileConstants.au3>
 
-LogMessage("Loaded runLORASR.Sweep version 0.4.0.75", 3)
+LogMessage("Loaded runLORASR.Sweep version 0.4.1.0", 3)
 
 ; Main function
 Func SweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sInputFolder = "Input")

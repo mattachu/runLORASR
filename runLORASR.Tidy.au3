@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.13
- Modified:       2017.08.11
- Version:        0.4.0.49
+ Modified:       2017.08.25
+ Version:        0.4.0.51
 
  Script Function:
 	Tidy up files from a batch run of LORASR
@@ -15,7 +15,7 @@
 #include-once
 #include "runLORASR.Functions.au3"
 
-LogMessage("Loaded runLORASR.Tidy version 0.4.0.49", 3)
+LogMessage("Loaded runLORASR.Tidy version 0.4.0.51", 3)
 
 ; Tidy up files from an completed run
 Func TidyIncompleteRun($sRun, $sWorkingDirectory = @WorkingDir, $sIncompleteFolder = "Incomplete")
@@ -177,6 +177,7 @@ Func TidyBatchFiles($sWorkingDirectory = @WorkingDir, $sSimulationProgram = "LOR
 	If FileExists($sWorkingDirectory & "\*.xlsx") Then MoveFiles("*.xlsx", $sWorkingDirectory, $sWorkingDirectory & "\" & $sOutputFolder, True)
 	If FileExists($sWorkingDirectory & "\*.xls") Then MoveFiles("*.xls", $sWorkingDirectory, $sWorkingDirectory & "\" & $sOutputFolder, True)
 	;If FileExists($sWorkingDirectory & "\*.csv") Then MoveFiles("*.csv", $sWorkingDirectory, $sWorkingDirectory & "\" & $sOutputFolder, True) ;--- don't clear up the Batch results.csv file as this is a summary of the batch
+	If FileExists($sWorkingDirectory & "\" & $sOutputFolder & "\" & $sSweepFile) Then MoveFiles($sSweepFile, $sWorkingDirectory & "\" & $sOutputFolder, $sWorkingDirectory, False) ; exclude sweep file from tidying (see above)
 
 	; Delete LORASR simulation files
 	LogMessage("Clearing up LORASR simulation files", 3, "TidyBatchFiles")

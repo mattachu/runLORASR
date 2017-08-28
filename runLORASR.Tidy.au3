@@ -17,7 +17,7 @@
 
 LogMessage("Loaded runLORASR.Tidy version 0.4.1.0", 3)
 
-; Tidy up files from an completed run
+; Tidy up files from an incomplete run
 Func TidyIncompleteRun($sRun, $sWorkingDirectory = @WorkingDir, $sIncompleteFolder = "Incomplete")
 	LogMessage("Called TidyIncompleteRun($sRun = " & $sRun & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sIncompleteFolder = " & $sIncompleteFolder & ")", 5)
 
@@ -32,7 +32,7 @@ Func TidyIncompleteRun($sRun, $sWorkingDirectory = @WorkingDir, $sIncompleteFold
 
 EndFunc
 
-; Tidy up files from an incomplete run
+; Tidy up files from a completed run
 Func TidyCompletedRun($sRun, $sWorkingDirectory = @WorkingDir, $sInputFolder = "Input", $sOutputFolder = "Output", $sRunFolder = "Runs")
 	LogMessage("Called TidyCompletedRun($sRun = " & $sRun & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sInputFolder = " & $sInputFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ")", 5)
 

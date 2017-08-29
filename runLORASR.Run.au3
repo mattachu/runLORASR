@@ -215,7 +215,7 @@ Func RunCalculation()
 	; Wait for the calculation window to be complete (transmission ratio is the last line of ouptut)
 	$hLORASR = SafeActivate($g_sConsoleWindowTitle, "TRATIO=", $iCalculationTimeout)
 	If $hLORASR = 0 Then
-		ThrowError("Could not finish the calculation.", "RunCalculation", @error)
+		ThrowError("Could not finish the calculation.", 3, "RunCalculation", @error)
 		KillLORASR()
 		SetError(7)
 		Return 0

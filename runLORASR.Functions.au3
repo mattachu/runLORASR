@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.12
  Modified:       2017.08.25
- Version:        0.4.1.0
+ Version:        0.4.2.1
 
  Script Function:
 	Functions used by runLORASR
@@ -26,7 +26,7 @@ Global $g_sLogFile = "runLORASR.log"
 
 ; Create new log file on first open
 CreateLogFile($g_sLogFile, @WorkingDir)
-LogMessage("Loaded runLORASR.Functions version 0.4.1.0", 3)
+LogMessage("Loaded runLORASR.Functions version 0.4.2.1", 3)
 
 ; Function to read settings from runLORASR.ini file
 Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProgram, ByRef $sSweepFile, ByRef $sTemplateFile, ByRef $sResultsFile, ByRef $sPlotFile, ByRef $sInputFolder, ByRef $sOutputFolder, ByRef $sRunFolder, ByRef $sIncompleteFolder, ByRef $bCleanup)
@@ -373,7 +373,7 @@ Func CreateLogFile($sLogFile = $g_sLogFile, $sWorkingDirectory = @WorkingDir)
 EndFunc
 
 ; Function to handle errors
-Func ThrowError($sErrorText = "", $iImportance = 3, $sFunctionName = "", $iErrorCode = 0)
+Func ThrowError($sErrorText = "", $iImportance = 3, $sFunctionName = "", $iErrorCode = 0, $sLogFile = $g_sLogFile, $sWorkingDirectory = @WorkingDir)
 	; Note there is no logging in this function, as that could create a recursive loop.
 
 	; Declarations
@@ -388,7 +388,7 @@ Func ThrowError($sErrorText = "", $iImportance = 3, $sFunctionName = "", $iError
 	$sErrorMessage &= @CRLF
 
 	; Send the message
-	LogMessage($sErrorMessage, $iImportance, $sFunctionName)
+	LogMessage($sErrorMessage, $iImportance, "", $sLogFile, $sWorkingDirectory)
 
 	; Set error code
 	If $iErrorCode Then

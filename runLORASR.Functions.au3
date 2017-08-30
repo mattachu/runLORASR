@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.12
- Modified:       2017.08.25
- Version:        0.4.2.1
+ Modified:       2017.08.30
+ Version:        0.4.2.2
 
  Script Function:
 	Functions used by runLORASR
@@ -26,7 +26,7 @@ Global $g_sLogFile = "runLORASR.log"
 
 ; Create new log file on first open
 CreateLogFile($g_sLogFile, @WorkingDir)
-LogMessage("Loaded runLORASR.Functions version 0.4.2.1", 3)
+LogMessage("Loaded runLORASR.Functions version 0.4.2.2", 3)
 
 ; Function to read settings from runLORASR.ini file
 Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProgram, ByRef $sSweepFile, ByRef $sTemplateFile, ByRef $sResultsFile, ByRef $sPlotFile, ByRef $sInputFolder, ByRef $sOutputFolder, ByRef $sRunFolder, ByRef $sIncompleteFolder, ByRef $bCleanup)
@@ -281,42 +281,51 @@ Func LogMessage($sMessageText, $iImportance = 3, $sFunctionName = "", $sLogFile 
 	Local $sMarkdownMessage = ""
 	Local $asResult
 
-	; Build message
-	If $sFunctionName Then
-		$sLogMessage &= "[" & $sFunctionName & "] " & $sMessageText
-	Else
-		$sLogMessage = $sMessageText
-	EndIf
+	; Errors get special handling
+	If StringInStr($sMessageText, "ERROR") Then
 
-	; Handling for Markdown log files
-	; Start of the program gets special handling
-	$asResult = StringRegExp($sMessageText, "Starting ([a-zA-Z]+LORASR)", 1)
-	If UBound($asResult) > 0 Then
-		; Add a header to the Markdown log file
-		$sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF
-		$sMarkdownMessage &= "# " & $asResult[0] & @CRLF & @CRLF
-		If $sFunctionName Then $sMarkdownMessage &= "[" & $sFunctionName & "] "
-		$sMarkdownMessage &= $sMessageText & @CRLF & @CRLF
-		$sMarkdownMessage &= "--------------------------------------------------------------------------------" & @CRLF & @CRLF
+		; Log message already created by the error handler
+		$sLogMessage = $sMessageText
+		$sMarkdownMessage = $sMessageText
+
 	Else
-		; Importance level 1 and 2 messages get headings
-		Switch $iImportance
-			Case 1
-				$sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF
-				$sMarkdownMessage &= "# " & Heading($sMessageText)
-				If $sFunctionName Then $sMarkdownMessage &= @CRLF & @CRLF & "[" & $sFunctionName & "] " & $sMessageText
-			Case 2
-				$sMarkdownMessage = "## " & Heading($sMessageText)
-				If $sFunctionName Then $sMarkdownMessage &= @CRLF & @CRLF & "[" & $sFunctionName & "] " & $sMessageText
-			Case Else
-				$sMarkdownMessage = $sLogMessage
-		EndSwitch
-		; Start of each run in a batch gets special Handling
-		If StringLeft($sMessageText, 12) = "Starting run" Then $sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF & $sMarkdownMessage
-		; 'Tidying up leftover files' comes after all runs are complete
-		If StringInStr($sMessageText, "leftover") Then $sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF & $sMarkdownMessage
-		; Add spaces after the message body to give a new line in Markdown
-		$sMarkdownMessage &= "  "
+
+		; Create message from function name and message text
+		If $sFunctionName Then
+			$sLogMessage &= "[" & $sFunctionName & "] " & $sMessageText
+		Else
+			$sLogMessage = $sMessageText
+		EndIf
+
+		; Start of the program gets special handling in Markdown version
+		$asResult = StringRegExp($sMessageText, "Starting ([a-zA-Z]+LORASR)", 1)
+		If UBound($asResult) > 0 Then
+			; Add a header to the Markdown log file
+			$sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF
+			$sMarkdownMessage &= "# " & $asResult[0] & @CRLF & @CRLF
+			If $sFunctionName Then $sMarkdownMessage &= "[" & $sFunctionName & "] "
+			$sMarkdownMessage &= $sMessageText & @CRLF & @CRLF
+			$sMarkdownMessage &= "--------------------------------------------------------------------------------" & @CRLF & @CRLF
+		Else
+			; Importance level 1 and 2 messages get headings
+			Switch $iImportance
+				Case 1
+					$sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF
+					$sMarkdownMessage &= "# " & Heading($sMessageText)
+					If $sFunctionName Then $sMarkdownMessage &= @CRLF & @CRLF & "[" & $sFunctionName & "] " & $sMessageText
+				Case 2
+					$sMarkdownMessage = "## " & Heading($sMessageText)
+					If $sFunctionName Then $sMarkdownMessage &= @CRLF & @CRLF & "[" & $sFunctionName & "] " & $sMessageText
+				Case Else
+					$sMarkdownMessage = $sLogMessage
+			EndSwitch
+			; Start of each run in a batch gets special Handling
+			If StringLeft($sMessageText, 12) = "Starting run" Then $sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF & $sMarkdownMessage
+			; 'Tidying up leftover files' comes after all runs are complete
+			If StringInStr($sMessageText, "leftover") Then $sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF & $sMarkdownMessage
+			; Add spaces after the message body to give a new line in Markdown
+			$sMarkdownMessage &= "  "
+		EndIf
 	EndIf
 
 	; Write to console (when running from development environment)
@@ -420,13 +429,13 @@ Func ThrowError($sErrorText = "", $iImportance = 3, $sFunctionName = "", $iError
 	; Build error message from given information
 	$sErrorMessage = @CRLF & "*** ERROR "
 	If $sFunctionName Then $sErrorMessage &= "in " & $sFunctionName & " "
-	$sErrorMessage &= "***" & @CRLF
-	If $sErrorText Then $sErrorMessage &= $sErrorText & @CRLF
-	If $iErrorCode Then $sErrorMessage &= "Error code: " & String($iErrorCode) & @CRLF
-	$sErrorMessage &= @CRLF & @CRLF
+	$sErrorMessage &= "***  " & @CRLF
+	If $sErrorText Then $sErrorMessage &= $sErrorText & "  " & @CRLF
+	If $iErrorCode Then $sErrorMessage &= "Error code: " & String($iErrorCode) & "  " & @CRLF
+	$sErrorMessage &= @CRLF
 
 	; Send the message
-	LogMessage($sErrorMessage, $iImportance, "", $sLogFile, $sWorkingDirectory)
+	LogMessage($sErrorMessage, $iImportance, $sFunctionName, $sLogFile, $sWorkingDirectory)
 
 	; Set error code
 	If $iErrorCode Then

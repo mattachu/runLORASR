@@ -221,7 +221,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 		SetError(5)
 		Return 0
 	Else
-		LogMessage("Total number of particles simulated: " & $sTotalParticles, 5, "SaveRunResults")
+		LogMessage("Total number of particles simulated: " & $sTotalParticles, 4, "SaveRunResults")
 	EndIf
 
 	; Read in output file
@@ -246,7 +246,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 		SetError(7)
 		Return 0
 	Else
-		LogMessage("Number of particles transmitted: " & $sTransmittedParticles, 5, "SaveRunResults")
+		LogMessage("Number of particles transmitted: " & $sTransmittedParticles, 4, "SaveRunResults")
 	EndIf
 
 	; Calculate transmission
@@ -257,7 +257,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 		SetError(8)
 		Return 0
 	Else
-		LogMessage("Transmission: " & $sTransmission & "%", 5, "SaveRunResults")
+		LogMessage("Transmission: " & $sTransmission & "%", 3, "SaveRunResults")
 	EndIf
 
 	; Find core particles data
@@ -272,7 +272,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 		SetError(9)
 		Return 0
 	Else
-		LogMessage("Particles in core: " & $sCoreParticles & "%", 5, "SaveRunResults")
+		LogMessage("Particles in core: " & $sCoreParticles & "%", 3, "SaveRunResults")
 	EndIf
 
 	; File details

@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.08.08
  Modified:       2017.08.25
- Version:        0.4.1.0
+ Version:        0.4.2.1
 
  Script Function:
 	Work through a batch of input files and run LORASR for each one
@@ -23,7 +23,7 @@
 #include "runLORASR.Plots.au3"
 #include "runLORASR.Tidy.au3"
 
-LogMessage("Loaded runLORASR.Batch version 0.4.1.0", 3)
+LogMessage("Loaded runLORASR.Batch version 0.4.2.1", 3)
 
 ; Main function
 Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program Files (x86)\LORASR", $sSimulationProgram = "LORASR.exe", $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sPlotFile = "Plots.xlsx", $sInputFolder = "Input", $sOutputFolder = "Output", $sRunFolder = "Runs", $sIncompleteFolder = "Incomplete", $bCleanup = True)
@@ -45,7 +45,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 	EndIf
 
 	; Copy input files to working directory
-	LogMessage("Searching for input files...", 2, "BatchLORASR")
+	LogMessage("Finding input files...", 2, "BatchLORASR")
 	$iResult = FindInputFiles($sWorkingDirectory, $sInputFolder, $sSweepFile, $sTemplateFile, $sPlotFile, $sProgramPath)
 	If (Not $iResult) Or @error Then
 		; Errors at this stage may not stop the batch from running, but should be noted.
@@ -55,7 +55,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 	EndIf
 
 	; Try to set up parameter sweep
-	LogMessage("Checking for parameter sweep definition...", 2, "BatchLORASR")
+	LogMessage("Finding parameter sweep definition...", 2, "BatchLORASR")
 	If RunSweepLORASR($sWorkingDirectory, $sSweepFile, $sTemplateFile, $sResultsFile, $sInputFolder) Then
 		; If parameter sweep preparations were successful, the results file should already be created, so don't create it again.
 		$bCreateResultsFile = False
@@ -95,7 +95,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 	EndIf
 
 	; Get list of input files in working directory
-	LogMessage("Starting to process input files...", 2, "BatchLORASR")
+	LogMessage("Ready to begin processing input files...", 2, "BatchLORASR")
 	$asInputFiles = _FileListToArray($sWorkingDirectory, "*.in")
 	If (UBound($asInputFiles) = 0) Or @error Then
 		ThrowError("No input files found in " & $sWorkingDirectory & " nor in input subfolder '" & $sInputFolder & "'. Batch cancelled.", 1, "BatchLORASR", @error)
@@ -120,7 +120,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 		$iResult = RunLORASR($sRun, $sWorkingDirectory, $sSimulationProgramPath, $sInputFolder)
 
 		; Report result
-		LogMessage("Run " & $sRun & " Result: " & $iResult, 2, "BatchLORASR")
+		LogMessage("Result for run " & $sRun & ": " & $iResult, 2, "BatchLORASR")
 		$tEnd = _Date_Time_GetLocalTime()
 		$sEnd = _Date_Time_SystemTimeToDateTimeStr($tEnd, 1)
 		LogMessage("Current time: " & $sEnd, 4, "BatchLORASR")
@@ -129,7 +129,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 		If Not ($iResult = 1) Then
 			LogMessage("Starting run " & $sRun & " again...", 2, "BatchLORASR")
 			$iResult = RunLORASR($sRun, $sWorkingDirectory, $sSimulationProgramPath, $sInputFolder)
-			LogMessage("Run " & $sRun & " Result: " & $iResult, 2, "BatchLORASR")
+			LogMessage("Result for re-run " & $sRun & ": " & $iResult, 2, "BatchLORASR")
 			$tEnd = _Date_Time_GetLocalTime()
 			$sEnd = _Date_Time_SystemTimeToDateTimeStr($tEnd, 1)
 			LogMessage("Current time: " & $sEnd, 4, "BatchLORASR")
@@ -143,7 +143,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 		EndIf
 
 		; Save run results to output file
-		LogMessage("Saving run " & $sRun & " to batch results output file...", 2, "BatchLORASR")
+		LogMessage("Saving summary results for run " & $sRun & " to batch results output file...", 2, "BatchLORASR")
 		$iResult = SaveRunResults($sRun, $sWorkingDirectory, $sResultsFile)
 		If (Not $iResult) Or @error Then
 			; Log failure and continue
@@ -154,7 +154,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 		EndIf
 
 		; Create plots spreadsheet
-		LogMessage("Saving results of run " & $sRun & " to spreadsheet and creating plots...", 2, "BatchLORASR")
+		LogMessage("Plotting results of run " & $sRun & " to spreadsheet...", 2, "BatchLORASR")
 		$iResult = PlotLORASR($sWorkingDirectory, $sRun & ".xlsx", $sPlotFile, $sProgramPath)
 		If (Not $iResult) Or @error Then
 			; Log failure and continue

@@ -278,12 +278,45 @@ Func LogMessage($sMessageText, $iImportance = 3, $sFunctionName = "", $sLogFile 
 	; Declarations
 	Local $fMessage
 	Local $sLogMessage = ""
+	Local $sMarkdownMessage = ""
+	Local $asResult
 
 	; Build message
 	If $sFunctionName Then
-		$sLogMessage = $sFunctionName & ": " & $sMessageText
+		$sLogMessage &= "[" & $sFunctionName & "] " & $sMessageText
 	Else
 		$sLogMessage = $sMessageText
+	EndIf
+
+	; Handling for Markdown log files
+	; Start of the program gets special handling
+	$asResult = StringRegExp($sMessageText, "Starting ([a-zA-Z]+LORASR)", 1)
+	If UBound($asResult) > 0 Then
+		; Add a header to the Markdown log file
+		$sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF
+		$sMarkdownMessage &= "# " & $asResult[0] & @CRLF & @CRLF
+		If $sFunctionName Then $sMarkdownMessage &= "[" & $sFunctionName & "] "
+		$sMarkdownMessage &= $sMessageText & @CRLF & @CRLF
+		$sMarkdownMessage &= "--------------------------------------------------------------------------------" & @CRLF & @CRLF
+	Else
+		; Importance level 1 and 2 messages get headings
+		Switch $iImportance
+			Case 1
+				$sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF
+				$sMarkdownMessage &= "# " & Heading($sMessageText)
+				If $sFunctionName Then $sMarkdownMessage &= @CRLF & @CRLF & "[" & $sFunctionName & "] " & $sMessageText
+			Case 2
+				$sMarkdownMessage = "## " & Heading($sMessageText)
+				If $sFunctionName Then $sMarkdownMessage &= @CRLF & @CRLF & "[" & $sFunctionName & "] " & $sMessageText
+			Case Else
+				$sMarkdownMessage = $sLogMessage
+		EndSwitch
+		; Start of each run in a batch gets special Handling
+		If StringLeft($sMessageText, 12) = "Starting run" Then $sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF & $sMarkdownMessage
+		; 'Tidying up leftover files' comes after all runs are complete
+		If StringInStr($sMessageText, "leftover") Then $sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF & $sMarkdownMessage
+		; Add spaces after the message body to give a new line in Markdown
+		$sMarkdownMessage &= "  "
 	EndIf
 
 	; Write to console (when running from development environment)
@@ -301,7 +334,7 @@ Func LogMessage($sMessageText, $iImportance = 3, $sFunctionName = "", $sLogFile 
 		; Blank line to separate out important messages
 		If ($iImportance <= 2) And ($g_iLogFileVerbosity > 2) Then WriteToLogFile("", $sLogFile, $sWorkingDirectory)
 		; Write message
-		WriteToLogFile($sLogMessage, $sLogFile, $sWorkingDirectory)
+		WriteToLogFile($sMarkdownMessage, $sLogFile, $sWorkingDirectory)
 	EndIf
 
 	; Message box
@@ -356,13 +389,18 @@ Func CreateLogFile($sLogFile = $g_sLogFile, $sWorkingDirectory = @WorkingDir)
 	$hLogFile = FileOpen($sWorkingDirectory & "\" & $sLogFile, $FO_APPEND)
 
 	; Write headers
-	FileWriteLine($hLogFile, "-----------------------------------")
-	FileWriteLine($hLogFile, "      Log file for runLORASR       ")
-	FileWriteLine($hLogFile, "-----------------------------------")
-	FileWriteLine($hLogFile, "Working folder: " & $sWorkingDirectory)
+	FileWriteLine($hLogFile, "--------------------------------------------------------------------------------")
+	FileWriteLine($hLogFile, "")
+	FileWriteLine($hLogFile, "# runLORASR log file")
+	FileWriteLine($hLogFile, "")
+	FileWriteLine($hLogFile, "Working folder: `" & $sWorkingDirectory & "`  ")
 	$tCurrentTime = _Date_Time_GetLocalTime()
 	FileWriteLine($hLogFile, "Run date/time:  " & _Date_Time_SystemTimeToDateTimeStr($tCurrentTime,1))
-	FileWriteLine($hLogFile, "-----------------------------------")
+	FileWriteLine($hLogFile, "")
+	FileWriteLine($hLogFile, "--------------------------------------------------------------------------------")
+	FileWriteLine($hLogFile, "")
+	FileWriteLine($hLogFile, "## Loading runLORASR libraries")
+	FileWriteLine($hLogFile, "")
 
 	; Close file
 	FileClose($hLogFile)
@@ -385,7 +423,7 @@ Func ThrowError($sErrorText = "", $iImportance = 3, $sFunctionName = "", $iError
 	$sErrorMessage &= "***" & @CRLF
 	If $sErrorText Then $sErrorMessage &= $sErrorText & @CRLF
 	If $iErrorCode Then $sErrorMessage &= "Error code: " & String($iErrorCode) & @CRLF
-	$sErrorMessage &= @CRLF
+	$sErrorMessage &= @CRLF & @CRLF
 
 	; Send the message
 	LogMessage($sErrorMessage, $iImportance, "", $sLogFile, $sWorkingDirectory)
@@ -399,5 +437,28 @@ Func ThrowError($sErrorText = "", $iImportance = 3, $sFunctionName = "", $iError
 
 	; Exit
 	Return 1
+
+EndFunc
+
+; Function to make a heading from a message
+Func Heading($sText)
+	; No logging as this is part of the logging process
+
+	; Trim any trailing dots
+	While StringRight($sText, 1) = "."
+		$sText = StringTrimRight($sText, 1)
+	Wend
+
+	; Keep just the first part before ":" or " - "
+	If StringInStr($sText, ":") Then $sText = StringLeft($sText, StringInStr($sText, ":") - 1)
+	If StringInStr($sText, " - ") Then $sText = StringLeft($sText, StringInStr($sText, " - ") - 1)
+
+	; Lose the detail after connecting words
+	If StringInStr($sText, " to ") Then $sText = StringLeft($sText, StringInStr($sText, " to ") - 1)
+	If StringInStr($sText, " of ") Then $sText = StringLeft($sText, StringInStr($sText, " of ") - 1)
+	If StringInStr($sText, " for ") Then $sText = StringLeft($sText, StringInStr($sText, " for ") - 1)
+
+	; Return modified string
+	Return $sText
 
 EndFunc

@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.12
  Modified:       2017.08.30
- Version:        0.4.2.2
+ Version:        0.4.2.3
 
  Script Function:
 	Functions used by runLORASR
@@ -26,11 +26,11 @@ Global $g_sLogFile = "runLORASR.log"
 
 ; Create new log file on first open
 CreateLogFile($g_sLogFile, @WorkingDir)
-LogMessage("Loaded runLORASR.Functions version 0.4.2.2", 3)
+LogMessage("Loaded `runLORASR.Functions` version 0.4.2.3", 3)
 
 ; Function to read settings from runLORASR.ini file
 Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProgram, ByRef $sSweepFile, ByRef $sTemplateFile, ByRef $sResultsFile, ByRef $sPlotFile, ByRef $sInputFolder, ByRef $sOutputFolder, ByRef $sRunFolder, ByRef $sIncompleteFolder, ByRef $bCleanup)
-	LogMessage("Called GetSettings($sWorkingDirectory = " & $sWorkingDirectory & ", ... )", 5)
+	LogMessage("Called `GetSettings($sWorkingDirectory = " & $sWorkingDirectory & ", ... )`", 5)
 
 	; Declarations
 	Local $sSettingsFile = "runLORASR.ini"
@@ -38,14 +38,14 @@ Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProg
 	Local $sFoundFile = ""
 
 	; Find INI file
-	LogMessage("Searching for settings file " & $sSettingsFile, 3, "GetSettings")
+	LogMessage("Searching for settings file `" & $sSettingsFile & "`", 3, "GetSettings")
 	For $sSearchFolder in $asSettingsSearchPath
 		$sFoundFile = FindFile($sSettingsFile, $sWorkingDirectory, $sSearchFolder, False)
 		If $sFoundFile Then ExitLoop
 	Next ; $sSearchFolder
 	If $sFoundFile Then
 		; Found settings file
-		LogMessage("Using settings file at " & $sFoundFile, 4, "GetSettings")
+		LogMessage("Using settings file at `" & $sFoundFile & "`", 4, "GetSettings")
 		$sSettingsFile = $sFoundFile
 	Else
 		; File not found
@@ -56,36 +56,36 @@ Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProg
 	; Load settings from INI file
 	; On error the variables are set to the given default values
 	$sProgramPath = IniRead($sSettingsFile, "Files and folders", "ProgramPath", "C:\Program Files (x86)\LORASR")
-	LogMessage("ProgramPath = " & $sProgramPath, 4, "GetSettings")
+	LogMessage("ProgramPath: `" & $sProgramPath & "`", 4, "GetSettings")
 	$sSimulationProgram = IniRead($sSettingsFile, "Files and folders", "SimulationProgram", "LORASR.exe")
-	LogMessage("SimulationProgram = " & $sSimulationProgram, 4, "GetSettings")
+	LogMessage("SimulationProgram: `" & $sSimulationProgram & "`", 4, "GetSettings")
 	$sSweepFile = IniRead($sSettingsFile, "Files and folders", "SweepFile", "Sweep.xlsx")
-	LogMessage("SweepFile = " & $sSweepFile, 4, "GetSettings")
+	LogMessage("SweepFile: `" & $sSweepFile & "`", 4, "GetSettings")
 	$sTemplateFile = IniRead($sSettingsFile, "Files and folders", "TemplateFile", "Template.txt")
-	LogMessage("TemplateFile = " & $sTemplateFile, 4, "GetSettings")
+	LogMessage("TemplateFile: `" & $sTemplateFile & "`", 4, "GetSettings")
 	$sResultsFile = IniRead($sSettingsFile, "Files and folders", "ResultsFile", "Batch results.csv")
-	LogMessage("ResultsFile = " & $sResultsFile, 4, "GetSettings")
+	LogMessage("ResultsFile: `" & $sResultsFile & "`", 4, "GetSettings")
 	$sPlotFile = IniRead($sSettingsFile, "Files and folders", "PlotFile", "Plots.xlsx")
-	LogMessage("PlotFile = " & $sPlotFile, 4, "GetSettings")
+	LogMessage("PlotFile: `" & $sPlotFile & "`", 4, "GetSettings")
 	$g_sLogFile = IniRead($sSettingsFile, "Files and folders", "LogFile", "runLORASR.log")
-	LogMessage("LogFile = " & $g_sLogFile, 4, "GetSettings")
+	LogMessage("LogFile: `" & $g_sLogFile & "`", 4, "GetSettings")
 	$sInputFolder = IniRead($sSettingsFile, "Files and folders", "InputFolder", "Input")
-	LogMessage("InputFolder = " & $sInputFolder, 4, "GetSettings")
+	LogMessage("InputFolder: `" & $sInputFolder & "`", 4, "GetSettings")
 	$sOutputFolder = IniRead($sSettingsFile, "Files and folders", "OutputFolder", "Output")
-	LogMessage("OutputFolder = " & $sOutputFolder, 4, "GetSettings")
+	LogMessage("OutputFolder: `" & $sOutputFolder & "`", 4, "GetSettings")
 	$sRunFolder = IniRead($sSettingsFile, "Files and folders", "RunFolder", "Runs")
-	LogMessage("RunFolder = " & $sRunFolder, 4, "GetSettings")
+	LogMessage("RunFolder: `" & $sRunFolder & "`", 4, "GetSettings")
 	$sIncompleteFolder = IniRead($sSettingsFile, "Files and folders", "IncompleteFolder", "Incomplete")
-	LogMessage("IncompleteFolder = " & $sIncompleteFolder, 4, "GetSettings")
+	LogMessage("IncompleteFolder: `" & $sIncompleteFolder & "`", 4, "GetSettings")
 
 	$bCleanup = (StringCompare(IniRead($sSettingsFile, "Options", "Cleanup", "True"), "True") = 0)
-	LogMessage("Cleanup = " & $bCleanup, 4, "GetSettings")
+	LogMessage("Cleanup: `" & $bCleanup & "`", 4, "GetSettings")
 	$g_iConsoleVerbosity = Number(IniRead($sSettingsFile, "Options", "ConsoleVerbosity", "5"))
-	LogMessage("ConsoleVerbosity = " & $g_iConsoleVerbosity, 4, "GetSettings")
+	LogMessage("ConsoleVerbosity: " & $g_iConsoleVerbosity, 4, "GetSettings")
 	$g_iLogFileVerbosity = Number(IniRead($sSettingsFile, "Options", "LogFileVerbosity", "4"))
-	LogMessage("LogFileVerbosity = " & $g_iLogFileVerbosity, 4, "GetSettings")
+	LogMessage("LogFileVerbosity: " & $g_iLogFileVerbosity, 4, "GetSettings")
 	$g_iMessageVerbosity = Number(IniRead($sSettingsFile, "Options", "MessageVerbosity", "1"))
-	LogMessage("MessageVerbosity = " & $g_iMessageVerbosity, 4, "GetSettings")
+	LogMessage("MessageVerbosity: " & $g_iMessageVerbosity, 4, "GetSettings")
 
 	; Exit function
 	LogMessage("All settings now set.", 3, "GetSettings")
@@ -95,7 +95,7 @@ EndFunc
 
 ; Function to find required files
 Func FindFile($sFindFileName, $sWorkingDir = @WorkingDir, $sMasterDir = $sWorkingDir & "\Input", $bCopy = True)
-	LogMessage("Called FindFile($sFindFileName = " & $sFindFileName & ", $sWorkingDir = " & $sWorkingDir & ", $sMasterDir = " & $sMasterDir & ", $bCopy = " & $bCopy & ")", 5)
+	LogMessage("Called `FindFile($sFindFileName = " & $sFindFileName & ", $sWorkingDir = " & $sWorkingDir & ", $sMasterDir = " & $sMasterDir & ", $bCopy = " & $bCopy & ")`", 5)
 
 	; Declarations
 	Local $sFoundFile = ""
@@ -116,7 +116,7 @@ Func FindFile($sFindFileName, $sWorkingDir = @WorkingDir, $sMasterDir = $sWorkin
 					$sFoundFile = $sWorkingDir & "\" & $sFindFileName
 				Else
 					; Return failure: copy failed
-					ThrowError("Could not copy file from " & $sMasterDir & "\" & $sFindFileName & "to" & $sWorkingDir & "\" & $sFindFileName, 3, "FindFile", @error)
+					ThrowError("Could not copy file from `" & $sMasterDir & "\" & $sFindFileName & "` to `" & $sWorkingDir & "\" & $sFindFileName & "`", 3, "FindFile", @error)
 					SetError(2)
 					Return 0
 				EndIf
@@ -126,21 +126,21 @@ Func FindFile($sFindFileName, $sWorkingDir = @WorkingDir, $sMasterDir = $sWorkin
 			EndIf
 		Else
 			; Return failure: file not found
-			LogMessage("File " & $sFindFileName & " not found in working directory nor in " & $sMasterDir, 3, "FindFile")
+			LogMessage("File `" & $sFindFileName & "` not found in working directory nor in `" & $sMasterDir & "`", 3, "FindFile")
 			SetError(1)
 			Return 0
 		EndIf
 	EndIf
 
 	; Return result
-	LogMessage("Found file = " & $sFoundFile, 3, "FindFile")
+	LogMessage("Found file: `" & $sFoundFile & "`", 3, "FindFile")
 	Return $sFoundFile
 
 EndFunc
 
 ; Function to copy a file or set of files
 Func CopyFiles($sCopyFileName, $sCopySourceFolder, $sCopyDestinationFolder, $bOverwrite = False)
-	LogMessage("Called CopyFiles($sCopyFileName = " & $sCopyFileName & ", $sCopySourceFolder = " & $sCopySourceFolder & ", $sCopyDestinationFolder = " & $sCopyDestinationFolder & ", $bOverwrite = " & $bOverwrite & ")", 5)
+	LogMessage("Called `CopyFiles($sCopyFileName = " & $sCopyFileName & ", $sCopySourceFolder = " & $sCopySourceFolder & ", $sCopyDestinationFolder = " & $sCopyDestinationFolder & ", $bOverwrite = " & $bOverwrite & ")`", 5)
 
 	Local $asCopyFiles
 	Local $iCurrentFile
@@ -155,7 +155,7 @@ Func CopyFiles($sCopyFileName, $sCopySourceFolder, $sCopyDestinationFolder, $bOv
 	EndIf
 
 	; Get list of files
-	LogMessage("Searching " & $sCopySourceFolder & " for " & $sCopyFileName, 5, "CopyFiles")
+	LogMessage("Searching `" & $sCopySourceFolder & "` for `" & $sCopyFileName & "`", 5, "CopyFiles")
 	$asCopyFiles = _FileListToArray($sCopySourceFolder, $sCopyFileName)
 
 	; No files found
@@ -169,14 +169,14 @@ Func CopyFiles($sCopyFileName, $sCopySourceFolder, $sCopyDestinationFolder, $bOv
 	For $iCurrentFile = 1 To UBound($asCopyFiles) - 1
 		$sCurrentFile = $asCopyFiles[$iCurrentFile]
 		If FileCopy($sCopySourceFolder & "\" & $sCurrentFile, $sCopyDestinationFolder & "\" & $sCurrentFile, $FLAGS) Then
-			LogMessage("Successfully copied " & $sCurrentFile, 4, "CopyFiles")
+			LogMessage("Successfully copied `" & $sCurrentFile & "`", 4, "CopyFiles")
 		Else
 			If Not @error Then
 				; File was not copied but no error encountered: i.e. no overwrite
-				LogMessage($sCurrentFile & " already exists, not overwritten.", 4, "CopyFiles")
+				LogMessage("File `" & $sCurrentFile & "` already exists, not overwritten.", 4, "CopyFiles")
 			Else
 				; File system error
-				ThrowError("Failed to copy " & $sCurrentFile, 3, "CopyFiles", @error)
+				ThrowError("Failed to copy `" & $sCurrentFile & "`", 3, "CopyFiles", @error)
 				SetError(2)
 			EndIf
 		EndIf
@@ -189,7 +189,7 @@ EndFunc
 
 ; Function to copy a file or set of files
 Func MoveFiles($sMoveFileName, $sMoveSourceFolder, $sMoveDestinationFolder, $bOverwrite = False)
-	LogMessage("Called MoveFiles($sMoveFileName = " & $sMoveFileName & ", $sMoveSourceFolder = " & $sMoveSourceFolder & ", $sMoveDestinationFolder = " & $sMoveDestinationFolder & ", $bOverwrite = " & $bOverwrite & ")", 5)
+	LogMessage("Called `MoveFiles($sMoveFileName = " & $sMoveFileName & ", $sMoveSourceFolder = " & $sMoveSourceFolder & ", $sMoveDestinationFolder = " & $sMoveDestinationFolder & ", $bOverwrite = " & $bOverwrite & ")`", 5)
 
 	Local $asMoveFiles
 	Local $iCurrentFile
@@ -204,7 +204,7 @@ Func MoveFiles($sMoveFileName, $sMoveSourceFolder, $sMoveDestinationFolder, $bOv
 	EndIf
 
 	; Get list of files
-	LogMessage("Searching " & $sMoveSourceFolder & " for " & $sMoveFileName, 5, "MoveFiles")
+	LogMessage("Searching `" & $sMoveSourceFolder & "` for `" & $sMoveFileName & "`", 5, "MoveFiles")
 	$asMoveFiles = _FileListToArray($sMoveSourceFolder, $sMoveFileName)
 
 	; No files found
@@ -218,14 +218,14 @@ Func MoveFiles($sMoveFileName, $sMoveSourceFolder, $sMoveDestinationFolder, $bOv
 	For $iCurrentFile = 1 To UBound($asMoveFiles) - 1
 		$sCurrentFile = $asMoveFiles[$iCurrentFile]
 		If FileMove($sMoveSourceFolder & "\" & $sCurrentFile, $sMoveDestinationFolder & "\" & $sCurrentFile, $FLAGS) Then
-			LogMessage("Successfully moved " & $sCurrentFile & " to " & $sMoveDestinationFolder, 4, "MoveFiles")
+			LogMessage("Successfully moved `" & $sCurrentFile & "` to `" & $sMoveDestinationFolder & "`", 4, "MoveFiles")
 		Else
 			If Not @error Then
 				; File was not copied but no error encountered: i.e. no overwrite
-				LogMessage($sCurrentFile & " already exists, not overwritten.", 4, "MoveFiles")
+				LogMessage("File `" & $sCurrentFile & "` already exists, not overwritten.", 4, "MoveFiles")
 			Else
 				; File system error
-				ThrowError("Failed to move " & $sCurrentFile, 3, "MoveFiles", @error)
+				ThrowError("Failed to move `" & $sCurrentFile & "`", 3, "MoveFiles", @error)
 				SetError(2)
 			EndIf
 		EndIf
@@ -238,7 +238,7 @@ EndFunc
 
 ; Function to delete a file or set of files
 Func DeleteFiles($sDeleteFileName, $sSearchFolder = @WorkingDir)
-	LogMessage("Called DeleteFiles($sDeleteFileName = " & $sDeleteFileName & ", $sSearchFolder = " & $sSearchFolder & ")", 5)
+	LogMessage("Called `DeleteFiles($sDeleteFileName = " & $sDeleteFileName & ", $sSearchFolder = " & $sSearchFolder & ")`", 5)
 
 	Local $asDeleteFiles
 	Local $iCurrentFile
@@ -246,7 +246,7 @@ Func DeleteFiles($sDeleteFileName, $sSearchFolder = @WorkingDir)
 	Local $FLAGS
 
 	; Get list of files
-	LogMessage("Searching for " & $sDeleteFileName, 5, "DeleteFiles")
+	LogMessage("Searching for `" & $sDeleteFileName & "`", 5, "DeleteFiles")
 	$asDeleteFiles = _FileListToArray($sSearchFolder, $sDeleteFileName)
 
 	; If no files found then exit function gracefully
@@ -260,9 +260,9 @@ Func DeleteFiles($sDeleteFileName, $sSearchFolder = @WorkingDir)
 	For $iCurrentFile = 1 To UBound($asDeleteFiles) - 1
 		$sCurrentFile = $asDeleteFiles[$iCurrentFile]
 		If FileDelete($sSearchFolder & "\" & $sCurrentFile) Then
-			LogMessage("Successfully deleted " & $sCurrentFile, 4, "DeleteFiles")
+			LogMessage("Successfully deleted `" & $sCurrentFile & "`", 4, "DeleteFiles")
 		Else
-			ThrowError("Failed to delete " & $sCurrentFile, 3, "DeleteFiles", @error)
+			ThrowError("Failed to delete `" & $sCurrentFile & "`", 3, "DeleteFiles", @error)
 			SetError(1)
 		EndIf
 	Next ; file
@@ -298,7 +298,7 @@ Func LogMessage($sMessageText, $iImportance = 3, $sFunctionName = "", $sLogFile 
 		EndIf
 
 		; Start of the program gets special handling in Markdown version
-		$asResult = StringRegExp($sMessageText, "Starting ([a-zA-Z]+LORASR)", 1)
+		$asResult = StringRegExp($sMessageText, "Starting `([a-zA-Z]+LORASR)`", 1)
 		If UBound($asResult) > 0 Then
 			; Add a header to the Markdown log file
 			$sMarkdownMessage = @CRLF & "--------------------------------------------------------------------------------" & @CRLF & @CRLF
@@ -458,14 +458,16 @@ Func Heading($sText)
 		$sText = StringTrimRight($sText, 1)
 	Wend
 
-	; Keep just the first part before ":" or " - "
+	; Keep just the first part before punctuation
 	If StringInStr($sText, ":") Then $sText = StringLeft($sText, StringInStr($sText, ":") - 1)
 	If StringInStr($sText, " - ") Then $sText = StringLeft($sText, StringInStr($sText, " - ") - 1)
+	If StringInStr($sText, ". ") Then $sText = StringLeft($sText, StringInStr($sText, ". ") - 1)
 
 	; Lose the detail after connecting words
 	If StringInStr($sText, " to ") Then $sText = StringLeft($sText, StringInStr($sText, " to ") - 1)
 	If StringInStr($sText, " of ") Then $sText = StringLeft($sText, StringInStr($sText, " of ") - 1)
 	If StringInStr($sText, " for ") Then $sText = StringLeft($sText, StringInStr($sText, " for ") - 1)
+	If StringInStr($sText, " from ") Then $sText = StringLeft($sText, StringInStr($sText, " from ") - 1)
 
 	; Return modified string
 	Return $sText

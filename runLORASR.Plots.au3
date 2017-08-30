@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.13
- Modified:       2017.08.25
- Version:        0.4.1.0
+ Modified:       2017.08.30
+ Version:        0.4.2.1
 
  Script Function:
 	Copy data from LORASR output files to Excel plotting spreadsheet
@@ -17,11 +17,11 @@
 #include <Excel.au3>
 #include <Date.au3>
 
-LogMessage("Loaded runLORASR.Plots version 0.4.1.0", 3)
+LogMessage("Loaded `runLORASR.Plots` version 0.4.2.1", 3)
 
 ; Function that defines input and output settings for each data type: changes to the LORASR code may require changes here.
 Func GetFileSettings($sDataType, ByRef $sDataFile1, ByRef $iDataStart1, ByRef $iDataEnd1, ByRef $sDataFile2, ByRef $iDataStart2, ByRef $iDataEnd2, ByRef $iWorksheet, ByRef $sDataLocation1, ByRef $sDataLocation2)
-	LogMessage("Called GetFileSettings($sDataType = " & $sDataType & ", ByRef $sDataFile1, ByRef $iDataStart1, ByRef $iDataEnd1, ByRef $sDataFile2, ByRef $iDataStart2, ByRef $iDataEnd2, ByRef $iWorksheet, ByRef $sDataLocation1, ByRef $sDataLocation2)", 5)
+	LogMessage("Called `GetFileSettings($sDataType = " & $sDataType & ", ByRef $sDataFile1, ByRef $iDataStart1, ByRef $iDataEnd1, ByRef $sDataFile2, ByRef $iDataStart2, ByRef $iDataEnd2, ByRef $iWorksheet, ByRef $sDataLocation1, ByRef $sDataLocation2)`", 5)
 
 	Switch $sDataType
 		Case "emittance values"
@@ -125,7 +125,7 @@ Func GetFileSettings($sDataType, ByRef $sDataFile1, ByRef $iDataStart1, ByRef $i
 			$iWorksheet = 11
 			$sDataLocation1 = "A2"
 		Case Else
-			ThrowError("Plot data type '" & $sDataType & "' not found.", "GetFileSettings", @error)
+			ThrowError("Plot data type `" & $sDataType & "` not found.", "GetFileSettings", @error)
 			SetError(1)
 			Return 0
 	EndSwitch
@@ -137,7 +137,7 @@ EndFunc
 
 ; Main function
 Func PlotLORASR($sWorkingDirectory = @WorkingDir, $sPlotFile = "Plots.xlsx", $sMasterPlotFile = "Plots.xlsx", $sMasterPath = "C:\Program Files (x86)\LORASR")
-	LogMessage("Called PlotLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sPlotFile = " & $sPlotFile & ", $sMasterPlotFile = " & $sMasterPlotFile & ", $sMasterPath = " & $sMasterPath & ")", 5)
+	LogMessage("Called `PlotLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sPlotFile = " & $sPlotFile & ", $sMasterPlotFile = " & $sMasterPlotFile & ", $sMasterPath = " & $sMasterPath & ")`", 5)
 
 	; Declarations
 	Local $oExcel, $oWorkbook
@@ -152,7 +152,7 @@ Func PlotLORASR($sWorkingDirectory = @WorkingDir, $sPlotFile = "Plots.xlsx", $sM
 		SetError(1)
 		Return 0
 	Else
-		LogMessage("Workbook created at " & $sSpreadsheet, 3, "PlotLORASR")
+		LogMessage("Workbook created at `" & $sSpreadsheet & "`", 3, "PlotLORASR")
 	EndIf
 
 	; Start Excel and open the workbook
@@ -189,7 +189,7 @@ EndFunc
 
 ; Function to plot data for each output file from LORASR
 Func PlotAllData(ByRef $oWorkbook, $sWorkingDirectory = @WorkingDir)
-	LogMessage("Called PlotAllData(ByRef $oWorkbook, $sWorkingDirectory = " & $sWorkingDirectory & ")", 5)
+	LogMessage("Called `PlotAllData(ByRef $oWorkbook, $sWorkingDirectory = " & $sWorkingDirectory & ")`", 5)
 
 	; Emittance values
 	LogMessage("Plotting emittance values...", 4, "PlotAllData")
@@ -277,7 +277,7 @@ Func PlotAllData(ByRef $oWorkbook, $sWorkingDirectory = @WorkingDir)
 
 	; Exit
 	If @error Then
-		LogMessage("Plots completed, but with errors.", 3, "PlotAllData")
+		LogMessage("Plot process finished, but with errors.", 3, "PlotAllData")
 		Return 0
 	Else
 		LogMessage("Plots completed.", 3, "PlotAllData")
@@ -288,7 +288,7 @@ EndFunc
 
 ; Function to plot a given set of data into the give Excel workbook
 Func PlotData($sDataType, ByRef $oWorkbook, $sWorkingDirectory = @WorkingDir)
-	LogMessage("Called PlotData($sDataType = " & $sDataType & ", ByRef $oWorkbook, $sWorkingDirectory = " & $sWorkingDirectory & ")", 5)
+	LogMessage("Called `PlotData($sDataType = " & $sDataType & ", ByRef $oWorkbook, $sWorkingDirectory = " & $sWorkingDirectory & ")`", 5)
 
 	; Declarations
 	Local $sDataFile1 = "", $sDataFile2 = "", $sDataLocation1 = "", $sDataLocation2 = ""
@@ -296,7 +296,7 @@ Func PlotData($sDataType, ByRef $oWorkbook, $sWorkingDirectory = @WorkingDir)
 	Local $asData
 
 	; Get file settings
-	LogMessage("Getting file settings for " & $sDataType, 5, "PlotData")
+	LogMessage("Getting file settings for `" & $sDataType & "`", 5, "PlotData")
 	$iResult = GetFileSettings($sDataType, $sDataFile1, $iDataStart1, $iDataEnd1, $sDataFile2, $iDataStart2, $iDataEnd2, $iWorksheet, $sDataLocation1, $sDataLocation2)
 	If (Not $iResult) Or @error Then
 		ThrowError("Could not set plot data type.", 3, "PlotData", @error)
@@ -317,19 +317,19 @@ Func PlotData($sDataType, ByRef $oWorkbook, $sWorkingDirectory = @WorkingDir)
 	EndIf
 
 	; Load data from file 1
-	LogMessage("Loading data from " & $sDataFile1, 5, "PlotData")
+	LogMessage("Loading data from `" & $sDataFile1 & "`", 5, "PlotData")
 	$asData = LoadData($sDataFile1, $sWorkingDirectory, $iDataStart1, $iDataEnd1)
 	If @error Then
-		ThrowError("Error while loading data in file " & $sDataFile1, 3, "PlotData", @error)
+		ThrowError("Error while loading data in file `" & $sDataFile1 & "`", 3, "PlotData", @error)
 		SetError(4)
 		Return 0
 	EndIf
 
 	; Write data from file 1 to spreadsheet
-	LogMessage("Writing data from " & $sDataFile1 & " to workbook", 5, "PlotData")
+	LogMessage("Writing data from `" & $sDataFile1 & "` to workbook", 5, "PlotData")
 	WriteData($oWorkbook, $iWorksheet, $sDataLocation1, $asData)
 	If @error Then
-		ThrowError("Error while writing data in file " & $sDataFile1, 3, "PlotData", @error)
+		ThrowError("Error while writing data in file `" & $sDataFile1 & "`", 3, "PlotData", @error)
 		SetError(5)
 		Return 0
 	EndIf
@@ -338,19 +338,19 @@ Func PlotData($sDataType, ByRef $oWorkbook, $sWorkingDirectory = @WorkingDir)
 	If $sDataFile2 And $iDataStart2 And $iDataEnd2 And $iWorksheet And $sDataLocation2 Then
 
 		; Load data from file 2
-		LogMessage("Loading data from " & $sDataFile2, 5, "PlotData")
+		LogMessage("Loading data from `" & $sDataFile2 & "`", 5, "PlotData")
 		$asData = LoadData($sDataFile2, $sWorkingDirectory, $iDataStart2, $iDataEnd2)
 		If @error Then
-			ThrowError("Error while loading data in file " & $sDataFile2, 3, "PlotData", @error)
+			ThrowError("Error while loading data in file `" & $sDataFile2 & "`", 3, "PlotData", @error)
 			SetError(6)
 			Return 0
 		EndIf
 
 		; Write data from file 2 to spreadsheet
-		LogMessage("Writing data from " & $sDataFile2 & " to workbook", 5, "PlotData")
+		LogMessage("Writing data from `" & $sDataFile2 & "` to workbook", 5, "PlotData")
 		WriteData($oWorkbook, $iWorksheet, $sDataLocation2, $asData)
 		If @error Then
-			ThrowError("Error while writing data in file " & $sDataFile2, 3, "PlotData", @error)
+			ThrowError("Error while writing data in file `" & $sDataFile2 & "`", 3, "PlotData", @error)
 			SetError(7)
 			Return 0
 		EndIf
@@ -364,7 +364,7 @@ EndFunc
 
 ; Function to create a new spreadsheet from the master; returns the full path and filename as a string
 Func CreatePlotSpreadsheet($sWorkingDirectory = @WorkingDir, $sPlotFile = "Plots.xlsx", $sMasterPlotFile = "Plots.xlsx", $sMasterPath = "C:\Program Files (x86)\LORASR")
-	LogMessage("Called CreatePlotSpreadsheet($sWorkingDirectory = " & $sWorkingDirectory & ", $sPlotFile = " & $sPlotFile & ", $sMasterPlotFile = " & $sMasterPlotFile & ", $sMasterPath = " & $sMasterPath & ")", 5)
+	LogMessage("Called `CreatePlotSpreadsheet($sWorkingDirectory = " & $sWorkingDirectory & ", $sPlotFile = " & $sPlotFile & ", $sMasterPlotFile = " & $sMasterPlotFile & ", $sMasterPath = " & $sMasterPath & ")`", 5)
 
 	; Declarations
 	Local $tCurrentTime
@@ -373,7 +373,7 @@ Func CreatePlotSpreadsheet($sWorkingDirectory = @WorkingDir, $sPlotFile = "Plots
 	If $sPlotFile = $sMasterPlotFile Then
 		$tCurrentTime = _Date_Time_GetLocalTime()
 		$sPlotFile = StringTrimRight($sPlotFile, 5) & "-" & StringReplace(StringReplace(StringReplace(_Date_Time_SystemTimeToDateTimeStr($tCurrentTime,1), "/", ""), ":", ""), " ", "-") & ".xlsx"
-		LogMessage("Creating unique plot file name: " & $sPlotFile, 5, "CreatePlotSpreadsheet")
+		LogMessage("Creating unique plot file name: `" & $sPlotFile & "`", 5, "CreatePlotSpreadsheet")
 	EndIf
 
 	; Find master spreadsheet
@@ -422,7 +422,7 @@ EndFunc
 
 ; Function to open a given spreadsheet and return handles for the Excel object and workbook object
 Func OpenPlotSpreadsheet(ByRef $oExcel, ByRef $oWorkbook, $sSpreadsheet = @WorkingDir & "\Plots.xlsx")
-	LogMessage("Called OpenPlotSpreadsheet(ByRef $oExcel, ByRef $oWorkbook, $sSpreadsheet = " & $sSpreadsheet & ")", 5)
+	LogMessage("Called `OpenPlotSpreadsheet(ByRef $oExcel, ByRef $oWorkbook, $sSpreadsheet = " & $sSpreadsheet & ")`", 5)
 
 	; Open Excel
 	$oExcel = _Excel_Open(False)
@@ -447,7 +447,7 @@ EndFunc
 
 ; Function to save workbook and quit Excel based on object handles
 Func SaveAndClosePlotSpreadsheet(ByRef $oExcel, ByRef $oWorkbook)
-	LogMessage("Called SaveAndClosePlotSpreadsheet(ByRef $oExcel, ByRef $oWorkbook)", 5)
+	LogMessage("Called `SaveAndClosePlotSpreadsheet(ByRef $oExcel, ByRef $oWorkbook)`", 5)
 
 	; Save the spreadsheet
 	_Excel_BookSave($oWorkbook)
@@ -478,7 +478,7 @@ EndFunc
 
 ; Function to load data from file
 Func LoadData($sDataFile, $sWorkingDirectory, $iDataStart, $iDataEnd)
-	LogMessage("Called LoadData($sDataFile = " & $sDataFile & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $iDataStart = " & $iDataStart & ", $iDataEnd = " & $iDataEnd & ")", 5)
+	LogMessage("Called `LoadData($sDataFile = " & $sDataFile & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $iDataStart = " & $iDataStart & ", $iDataEnd = " & $iDataEnd & ")`", 5)
 
 	; Declarations
 	Local $iDataCount = 0, $iCurrentLine = 0, $iCurrentDataPoint = 0
@@ -486,7 +486,7 @@ Func LoadData($sDataFile, $sWorkingDirectory, $iDataStart, $iDataEnd)
 	; Load data from file
 	Local $asFileData = FileReadToArray($sWorkingDirectory & "\" & $sDataFile)
 	If @error Then
-		ThrowError("Error while loading data from file " & $sDataFile, 3, "LoadData", @error)
+		ThrowError("Error while loading data from file `" & $sDataFile & "`", 3, "LoadData", @error)
 		SetError(1)
 		Return 0
 	EndIf
@@ -511,7 +511,7 @@ Func LoadData($sDataFile, $sWorkingDirectory, $iDataStart, $iDataEnd)
 		Next ;$iCurrentDataPoint
 	Next ;$iCurrentLine
 	If @error Then
-		ThrowError("Error while processing data in file " & $sDataFile, 3, "LoadData", @error)
+		ThrowError("Error while processing data in file `" & $sDataFile & "`", 3, "LoadData", @error)
 		SetError(2)
 		Return 0
 	EndIf
@@ -522,7 +522,7 @@ EndFunc
 
 ; Function to write data to spreadsheet
 Func WriteData(ByRef $oWorkbook, $iWorksheet, $sDataLocation, $asData)
-	LogMessage("Called WriteData(ByRef $oWorkbook, $iWorksheet = " & $iWorksheet & ", $sDataLocation = " & $sDataLocation & ", $asData = <array>)", 5)
+	LogMessage("Called `WriteData(ByRef $oWorkbook, $iWorksheet = " & $iWorksheet & ", $sDataLocation = " & $sDataLocation & ", $asData = <array>)`", 5)
 
 	; Write given data to given location in workbook
 	_Excel_RangeWrite($oWorkbook, $iWorksheet, $asData, $sDataLocation)

@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.07
- Modified:       2017.08.25
- Version:        0.4.1.0
+ Modified:       2017.08.30
+ Version:        0.4.2.1
 
  Script Function:
 	Create a batch of input files from a batch definition file and a template
@@ -20,11 +20,11 @@
 #include <File.au3>
 #include <FileConstants.au3>
 
-LogMessage("Loaded runLORASR.Sweep version 0.4.1.0", 3)
+LogMessage("Loaded `runLORASR.Sweep` version 0.4.2.1", 3)
 
 ; Main function
 Func SweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sInputFolder = "Input")
-	LogMessage("Called SweepLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sResultsFile = " & $sResultsFile & ", $sInputFolder = " & $sInputFolder & ")", 5)
+	LogMessage("Called `SweepLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sResultsFile = " & $sResultsFile & ", $sInputFolder = " & $sInputFolder & ")`", 5)
 
 	; Declarations
 	Local $iResult = 0, $iParameter = 0
@@ -85,7 +85,7 @@ EndFunc
 
 ; Function to clear up existing input files in the working directory
 Func DeleteInputFiles($sWorkingDirectory = @WorkingDir, $sTemplateFile = "Template.txt")
-	LogMessage("Called DeleteInputFiles($sWorkingDirectory = " & $sWorkingDirectory & ", $sTemplateFile = " & $sTemplateFile & ")", 5)
+	LogMessage("Called `DeleteInputFiles($sWorkingDirectory = " & $sWorkingDirectory & ", $sTemplateFile = " & $sTemplateFile & ")`", 5)
 
 	; Declarations
 	Local $bMoveTemplate = False
@@ -118,22 +118,22 @@ EndFunc
 
 ; Function to find sweep files and copy them to the working directory
 Func FindSweepFiles($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sInputFolder = "Input")
-	LogMessage("Called FindSweepFiles($sWorkingDirectory = " & $sWorkingDirectory & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sInputFolder = " & $sInputFolder & ")", 5)
+	LogMessage("Called `FindSweepFiles($sWorkingDirectory = " & $sWorkingDirectory & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sInputFolder = " & $sInputFolder & ")`", 5)
 
 	; Find sweep definition file
 	If FindFile($sSweepFile, $sWorkingDirectory, $sWorkingDirectory & "\" & $sInputFolder, True) Then
-		LogMessage("Found sweep parameters spreadsheet '" & $sSweepFile & "'", 4, "FindSweepFiles")
+		LogMessage("Found sweep parameters spreadsheet `" & $sSweepFile & "`", 4, "FindSweepFiles")
 	Else
-		ThrowError("Sweep parameters spreadsheet '" & $sSweepFile & "' not found.", 3, "FindSweepFiles", @error)
+		ThrowError("Sweep parameters spreadsheet `" & $sSweepFile & "` not found.", 3, "FindSweepFiles", @error)
 		SetError(1)
 		Return 0
 	EndIf
 
 	; Find template file
 	If FindFile($sSweepFile, $sWorkingDirectory, $sWorkingDirectory & "\" & $sInputFolder, True) Then
-		LogMessage("Found template file '" & $sTemplateFile & "'", 4, "FindSweepFiles")
+		LogMessage("Found template file `" & $sTemplateFile & "`", 4, "FindSweepFiles")
 	Else
-		ThrowError("Template file '" & $sTemplateFile & "' not found.", 3, "FindSweepFiles", @error)
+		ThrowError("Template file `" & $sTemplateFile & "` not found.", 3, "FindSweepFiles", @error)
 		SetError(2)
 		Return 0
 	EndIf
@@ -145,7 +145,7 @@ EndFunc
 
 ; Function to load sweep parameters from spreadsheet
 Func LoadSweepParameters(ByRef $asParameters, ByRef $asValues, $sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx")
-	LogMessage("Called LoadSweepParameters(ByRef $asParameters, ByRef $asValues, $sWorkingDirectory = " & $sWorkingDirectory & ", $sSweepFile = " & $sSweepFile & ")", 5)
+	LogMessage("Called `LoadSweepParameters(ByRef $asParameters, ByRef $asValues, $sWorkingDirectory = " & $sWorkingDirectory & ", $sSweepFile = " & $sSweepFile & ")`", 5)
 
 	; Declarations
 	Local $oExcel, $oWorkbook
@@ -159,10 +159,10 @@ Func LoadSweepParameters(ByRef $asParameters, ByRef $asValues, $sWorkingDirector
 	EndIf
 
 	; Open the spreadsheet
-	LogMessage("Opening workbook " & $sWorkingDirectory & "\" & $sSweepFile, 3, "LoadSweepParameters")
+	LogMessage("Opening workbook `" & $sWorkingDirectory & "\" & $sSweepFile & "`", 3, "LoadSweepParameters")
 	$oWorkbook = _Excel_BookOpen($oExcel, $sWorkingDirectory & "\" & $sSweepFile)
 	If @error Then
-		ThrowError("Error opening '" & $sSweepFile & "'.", 3, "LoadSweepParameters", @error)
+		ThrowError("Error opening workbook `" & $sSweepFile & "`", 3, "LoadSweepParameters", @error)
 		SetError(2)
 		Return 0
 	EndIf
@@ -206,7 +206,7 @@ EndFunc
 
 ; Function to sweep through a parameter and create input files for each value of that parameter
 Func SweepParameter($asParameters, $asValues, $iParameter = 0, $sWorkingDirectory = @WorkingDir, $sTemplateFile = "Template.txt")
-	LogMessage("Called SweepParameter($asParameters, $asValues, $iParameter = " & $iParameter & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sTemplateFile = " & $sTemplateFile & ")", 5)
+	LogMessage("Called `SweepParameter($asParameters, $asValues, $iParameter = " & $iParameter & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sTemplateFile = " & $sTemplateFile & ")`", 5)
 
 	; Declarations
 	Local $iValue = 0
@@ -256,7 +256,7 @@ Func SweepParameter($asParameters, $asValues, $iParameter = 0, $sWorkingDirector
 			; Copy files
 			FileCopy($sWorkingDirectory & "\" & $sBaseFile, $sWorkingDirectory & "\" & $sCurrentFile, $FC_OVERWRITE)
 			If @error Then
-				ThrowError("Error creating input file " & $sCurrentFile & " from base file " & $sBaseFile, 3, "SweepParameter", @error)
+				ThrowError("Error creating input file `" & $sCurrentFile & "` from base file `" & $sBaseFile & "`", 3, "SweepParameter", @error)
 				; Move to next file
 				SetError(0)
 				ContinueLoop
@@ -265,14 +265,14 @@ Func SweepParameter($asParameters, $asValues, $iParameter = 0, $sWorkingDirector
 			; Replace the dummy code for this current parameter with the value of the parameter
 			_ReplaceStringInFile($sWorkingDirectory & "\" & $sCurrentFile, $asParameters[$iParameter][3], $asValues[$iValue][$iParameter], $STR_CASESENSE)
 			If @error Then
-				ThrowError("Error modifying input file " & $sCurrentFile, 3, "SweepParameter", @error)
+				ThrowError("Error modifying input file `" & $sCurrentFile & "`", 3, "SweepParameter", @error)
 				; Move to next file
 				SetError(0)
 				ContinueLoop
 			EndIf
 
 			; Report success
-			LogMessage("Created input file " & $sCurrentFile, 3, "SweepParameter")
+			LogMessage("Created input file `" & $sCurrentFile & "`", 3, "SweepParameter")
 
 		Next ; $asBaseFiles
 
@@ -283,12 +283,12 @@ Func SweepParameter($asParameters, $asValues, $iParameter = 0, $sWorkingDirector
 		For $sBaseFile In $asBaseFiles
 			FileDelete($sWorkingDirectory & "\" & $sBaseFile)
 			If @error Then
-				ThrowError("Error deleting base file " & $sBaseFile, 3, "SweepParameter", @error)
+				ThrowError("Error deleting base file `" & $sBaseFile & "`", 3, "SweepParameter", @error)
 				; Move to next file
 				SetError(0)
 				ContinueLoop
 			EndIf
-			LogMessage("Deleted base file " & $sBaseFile, 3, "SweepParameter")
+			LogMessage("Deleted base file `" & $sBaseFile & "`", 3, "SweepParameter")
 		Next ; $sBaseFile
 	EndIf
 

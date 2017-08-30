@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.25
- Modified:       2017.08.25
- Version:        0.4.1.22
+ Modified:       2017.08.30
+ Version:        0.4.2.1
 
  Script Function:
 	Extract transmission results from LORASR output files
@@ -19,11 +19,11 @@
 #include <StringConstants.au3>
 #include "runLORASR.Functions.au3"
 
-LogMessage("Loaded runLORASR.Results version 0.4.1.22", 3)
+LogMessage("Loaded `runLORASR.Results` version 0.4.2.1", 3)
 
 ; Function to loop through all output files and save results
 Func SaveAllResults($sWorkingDirectory = @WorkingDir, $sResultsFile = "Batch results.csv", $sInputFolder = "Input", $sRunFolder = "Runs")
-	LogMessage("Called SaveAllResults($sWorkingDirectory = " & $sWorkingDirectory & ", $sResultsFile = " & $sResultsFile & ", $sInputFolder = " & $sInputFolder & ", $sRunFolder = " & $sRunFolder & ")", 5)
+	LogMessage("Called `SaveAllResults($sWorkingDirectory = " & $sWorkingDirectory & ", $sResultsFile = " & $sResultsFile & ", $sInputFolder = " & $sInputFolder & ", $sRunFolder = " & $sRunFolder & ")`", 5)
 
 	; Declarations
 	Local $asOutputFiles, $asRuns
@@ -36,7 +36,7 @@ Func SaveAllResults($sWorkingDirectory = @WorkingDir, $sResultsFile = "Batch res
 	If (UBound($asOutputFiles) = 0) Or @error Then
 		; If no files found, check for separate run folder
 		If FileExists($sWorkingDirectory & "\" & $sRunFolder) Then
-			LogMessage("Searching for output files in subfolder " & $sRunFolder, 4, "SaveAllResults")
+			LogMessage("Searching for output files in subfolder `" & $sRunFolder & "`", 4, "SaveAllResults")
 			$asOutputFiles = _FileListToArray($sWorkingDirectory & "\" & $sRunFolder, "*.out")
 		EndIf
 	EndIf
@@ -93,9 +93,9 @@ EndFunc
 ; Function to create results file to store the transmission results for each set of values in the parameter sweep
 Func CreateResultsFile($asParameters, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Batch results.csv")
 	If $asParameters Then
-		LogMessage("Called CreateResultsFile($asParameters = <array>, $sWorkingDirectory = " & $sWorkingDirectory & ", $sResultsFile = " & $sResultsFile & ")", 5)
+		LogMessage("Called `CreateResultsFile($asParameters = <array>, $sWorkingDirectory = " & $sWorkingDirectory & ", $sResultsFile = " & $sResultsFile & ")`", 5)
 	Else
-		LogMessage("Called CreateResultsFile($asParameters = 0, $sWorkingDirectory = " & $sWorkingDirectory & ", $sResultsFile = " & $sResultsFile & ")", 5)
+		LogMessage("Called `CreateResultsFile($asParameters = 0, $sWorkingDirectory = " & $sWorkingDirectory & ", $sResultsFile = " & $sResultsFile & ")`", 5)
 	EndIf
 
 	; Declarations
@@ -106,7 +106,7 @@ Func CreateResultsFile($asParameters, $sWorkingDirectory = @WorkingDir, $sResult
 	; Backup existing results file
 	If FileExists($sWorkingDirectory & "\" & $sResultsFile) Then
 		FileMove($sWorkingDirectory & "\" & $sResultsFile, $sWorkingDirectory & "\" & $sResultsFile & ".old", $FC_OVERWRITE)
-		LogMessage("Backed up old results file to " & $sWorkingDirectory & "\" & $sResultsFile & ".old", 4, "CreateResultsFile")
+		LogMessage("Backed up old results file to `" & $sWorkingDirectory & "\" & $sResultsFile & ".old`", 4, "CreateResultsFile")
 	EndIf
 
 	; Create new results file
@@ -117,7 +117,7 @@ Func CreateResultsFile($asParameters, $sWorkingDirectory = @WorkingDir, $sResult
 		SetError(1)
 		Return 0
 	EndIf
-	LogMessage("Created new results file " & $sWorkingDirectory & "\" & $sResultsFile, 3, "CreateResultsFile")
+	LogMessage("Created new results file `" & $sWorkingDirectory & "\" & $sResultsFile & "`", 3, "CreateResultsFile")
 
 	; Basic headers
 	$sHeader = "Run date, Run time, Transmission (%), Core particles (%)"
@@ -155,7 +155,7 @@ EndFunc
 
 ; Function to extract and save results for a single run
 Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Batch results.csv", $sInputFolder = "Input", $sRunFolder = "Runs")
-	LogMessage("Called SaveRunResults($sRun = " & $sRun & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sResultsFile = " & $sResultsFile & ", $sInputFolder = " & $sInputFolder & ", $sRunFolder = " & $sRunFolder & ")", 5)
+	LogMessage("Called `SaveRunResults($sRun = " & $sRun & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sResultsFile = " & $sResultsFile & ", $sInputFolder = " & $sInputFolder & ", $sRunFolder = " & $sRunFolder & ")`", 5)
 
 	; Declarations
 	Local $sInputFile = "", $sOutputFolder = "", $sOutputFile = "", $sTotalParticles = "", $sTransmittedParticles = "", $sTransmission = "", $sCoreParticles = "", $sRunDate = "", $sRunTime = ""
@@ -181,7 +181,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 	If (UBound($asOutputFiles) = 0) Or @error Then
 		If FileExists($sWorkingDirectory & "\" & $sRunFolder) Then
 			$sOutputFolder = $sWorkingDirectory & "\" & $sRunFolder
-			LogMessage("Searching for output files in subfolder " & $sRunFolder, 4, "SaveRunResults")
+			LogMessage("Searching for output files in subfolder `" & $sRunFolder & "`", 4, "SaveRunResults")
 			$asOutputFiles = _FileListToArray($sOutputFolder, $sRun & "-*.out")
 		EndIf
 	EndIf
@@ -199,10 +199,10 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 	EndIf
 
 	; Read in input file
-	LogMessage("Reading input file " & $sInputFile, 4, "SaveRunResults")
+	LogMessage("Reading input file `" & $sInputFile & "`", 4, "SaveRunResults")
 	$asFileContents = FileReadToArray($sInputFile)
 	If (UBound($asFileContents) = 0) Or @error Then
-		ThrowError("Error loading data from input file " & $sInputFile, 2, "SaveRunResults", @error)
+		ThrowError("Error loading data from input file `" & $sInputFile & "`", 2, "SaveRunResults", @error)
 		SetError(4)
 		Return 0
 	EndIf
@@ -225,7 +225,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 	EndIf
 
 	; Read in output file
-	LogMessage("Reading output file " & $sOutputFile, 4, "SaveRunResults")
+	LogMessage("Reading output file `" & $sOutputFile & "`", 4, "SaveRunResults")
 	$asFileContents = FileReadToArray($sOutputFolder & "\" & $sOutputFile)
 	If (UBound($asFileContents) = 0) Or @error Then
 		ThrowError("Error loading data from output file " & $sOutputFile, 2, "SaveRunResults", @error)
@@ -268,7 +268,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 	Until StringLeft($asFileContents[$iCurrentLine],41) = "COMMON CORE-PART. OF INVESTIG. PLANES/%= "
 	$sCoreParticles = StringTrimLeft($asFileContents[$iCurrentLine], 42)
 	If (Not $sCoreParticles) Or @error Then
-		ThrowError("Error reading core particles data from output file " & $sOutputFile, 2, "SaveRunResults", @error)
+		ThrowError("Error reading core particles data from output file `" & $sOutputFile & "`", 2, "SaveRunResults", @error)
 		SetError(9)
 		Return 0
 	Else
@@ -282,7 +282,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 	$sRunDate = $asRunDetails[$iRunDetails - 1]
 	$sRunTime = StringTrimRight($asRunDetails[$iRunDetails],4)
 	If (Not $sRunDate) Or (Not $sRunTime) Or @error Then
-		ThrowError("Error reading run details from output file " & $sOutputFile, 2, "SaveRunResults", @error)
+		ThrowError("Error reading run details from output file `" & $sOutputFile & "`", 2, "SaveRunResults", @error)
 		SetError(10)
 		Return 0
 	EndIf
@@ -290,16 +290,16 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 	; Open results file
 	$hResultsFile = FileOpen($sWorkingDirectory & "\" & $sResultsFile, $FO_APPEND)
 	If (Not $hResultsFile) Or @error Then
-		ThrowError("Error opening batch results file " & $sResultsFile, 2, "SaveRunResults", @error)
+		ThrowError("Error opening batch results file `" & $sResultsFile & "`", 2, "SaveRunResults", @error)
 		SetError(11)
 		Return 0
 	EndIf
 
 	; Write out data to CSV
-	LogMessage("Writing results to file " & $sResultsFile, 3, "SaveRunResults")
+	LogMessage("Writing results to file `" & $sResultsFile & "`", 3, "SaveRunResults")
 	$iResult = FileWrite($hResultsFile, $sRunDate & ", " & $sRunTime & ", " & $sTransmission & ", " & $sCoreParticles)
 	If (Not $iResult) Or @error Then
-		ThrowError("Error writing to batch results file " & $sResultsFile, 2, "SaveRunResults", @error)
+		ThrowError("Error writing to batch results file `" & $sResultsFile & "`", 2, "SaveRunResults", @error)
 		FileWrite($hResultsFile, @CRLF)
 		FileClose($hResultsFile)
 		SetError(12)
@@ -311,7 +311,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 	While $iCurrentDetail < $iRunDetails - 1
 		$iResult = FileWrite($hResultsFile, ", " & $asRunDetails[$iCurrentDetail])
 		If (Not $iResult) Or @error Then
-			ThrowError("Error writing to batch results file " & $sResultsFile, 2, "SaveRunResults", @error)
+			ThrowError("Error writing to batch results file `" & $sResultsFile & "`", 2, "SaveRunResults", @error)
 			FileWrite($hResultsFile, @CRLF)
 			FileClose($hResultsFile)
 			SetError(13)
@@ -323,7 +323,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 	; Next line for next run
 	$iResult = FileWrite($hResultsFile, @CRLF)
 	If (Not $iResult) Or @error Then
-		ThrowError("Error writing to batch results file " & $sResultsFile, 2, "SaveRunResults", @error)
+		ThrowError("Error writing to batch results file `" & $sResultsFile & "`", 2, "SaveRunResults", @error)
 		FileClose($hResultsFile)
 		SetError(14)
 		Return 0
@@ -332,7 +332,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 	; Close results file
 	$iResult = FileClose($hResultsFile)
 	If (Not $iResult) Or @error Then
-		ThrowError("Error closing batch results file " & $sResultsFile, 2, "SaveRunResults", @error)
+		ThrowError("Error closing batch results file `" & $sResultsFile & "`", 2, "SaveRunResults", @error)
 		SetError(15)
 		Return 0
 	EndIf

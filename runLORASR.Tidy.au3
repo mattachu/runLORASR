@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.13
- Modified:       2017.08.25
- Version:        0.4.1.0
+ Modified:       2017.08.30
+ Version:        0.4.2.1
 
  Script Function:
 	Tidy up files from a batch run of LORASR
@@ -15,11 +15,11 @@
 #include-once
 #include "runLORASR.Functions.au3"
 
-LogMessage("Loaded runLORASR.Tidy version 0.4.1.0", 3)
+LogMessage("Loaded `runLORASR.Tidy` version 0.4.2.1", 3)
 
 ; Tidy up files from an incomplete run
 Func TidyIncompleteRun($sRun, $sWorkingDirectory = @WorkingDir, $sIncompleteFolder = "Incomplete")
-	LogMessage("Called TidyIncompleteRun($sRun = " & $sRun & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sIncompleteFolder = " & $sIncompleteFolder & ")", 5)
+	LogMessage("Called `TidyIncompleteRun($sRun = " & $sRun & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sIncompleteFolder = " & $sIncompleteFolder & ")`", 5)
 
 	; Move input file to incomplete folder
 	If FileExists($sWorkingDirectory & "\" & $sRun & ".in") Then MoveFiles($sRun & ".in", $sWorkingDirectory, $sWorkingDirectory & "\" & $sIncompleteFolder, True)
@@ -34,7 +34,7 @@ EndFunc
 
 ; Tidy up files from a completed run
 Func TidyCompletedRun($sRun, $sWorkingDirectory = @WorkingDir, $sInputFolder = "Input", $sOutputFolder = "Output", $sRunFolder = "Runs")
-	LogMessage("Called TidyCompletedRun($sRun = " & $sRun & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sInputFolder = " & $sInputFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ")", 5)
+	LogMessage("Called `TidyCompletedRun($sRun = " & $sRun & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sInputFolder = " & $sInputFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ")`", 5)
 
 	; Move input file to input folder
 	If FileExists($sWorkingDirectory & "\" & $sRun & ".in") Then MoveFiles($sRun & ".in", $sWorkingDirectory, $sWorkingDirectory & "\" & $sInputFolder, True)
@@ -50,7 +50,7 @@ EndFunc
 
 ; Test whether a particular run was completed or not, and tidy up accordingly
 Func TidyRunFiles($sRun, $sWorkingDirectory = @WorkingDir, $sInputFolder = "Input", $sIncompleteFolder = "Incomplete", $sOutputFolder = "Output", $sRunFolder = "Runs")
-	LogMessage("Called TidyRunFiles($sRun = " & $sRun & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sInputFolder = " & $sInputFolder & ", $sIncompleteFolder = " & $sIncompleteFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ")", 5)
+	LogMessage("Called `TidyRunFiles($sRun = " & $sRun & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sInputFolder = " & $sInputFolder & ", $sIncompleteFolder = " & $sIncompleteFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ")`", 5)
 
 	; Declarations
 	Local $asOutputFiles
@@ -99,7 +99,7 @@ EndFunc
 
 ; Work through all input files, test whether completed or not, and tidy up accordingly
 Func TidyAllRunFiles($sWorkingDirectory = @WorkingDir, $sInputFolder = "Input", $sIncompleteFolder = "Incomplete", $sOutputFolder = "Output", $sRunFolder = "Runs")
-	LogMessage("Called TidyAllRunFiles($sWorkingDirectory = " & $sWorkingDirectory & ", $sInputFolder = " & $sInputFolder & ", $sIncompleteFolder = " & $sIncompleteFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ")", 5)
+	LogMessage("Called `TidyAllRunFiles($sWorkingDirectory = " & $sWorkingDirectory & ", $sInputFolder = " & $sInputFolder & ", $sIncompleteFolder = " & $sIncompleteFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ")`", 5)
 
 	; Declarations
 	Local $sRun = ""
@@ -159,7 +159,7 @@ EndFunc
 
 ; Tidy up all files used or created by the batch process
 Func TidyBatchFiles($sWorkingDirectory = @WorkingDir, $sSimulationProgram = "LORASR.exe", $sSweepFile = "Sweep.xls", $sTemplateFile = "Template.txt", $sPlotFile = "Plots.xlsx", $sInputFolder = "Input", $sOutputFolder = "Output", $sRunFolder = "Runs")
-	LogMessage("Called TidyBatchFiles($sWorkingDirectory = " & $sWorkingDirectory & ", $sSimulationProgram = " & $sSimulationProgram & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sPlotFile = " & $sPlotFile & ", $sInputFolder = " & $sInputFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ")", 5)
+	LogMessage("Called `TidyBatchFiles($sWorkingDirectory = " & $sWorkingDirectory & ", $sSimulationProgram = " & $sSimulationProgram & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sPlotFile = " & $sPlotFile & ", $sInputFolder = " & $sInputFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ")`", 5)
 
 	; Move input files to input directory
 	LogMessage("Clearing up any input files", 3, "TidyBatchFiles")
@@ -198,7 +198,7 @@ EndFunc
 
 ; Tidy up the files produced directly by the LORASR simulation code
 Func TidySimulationFiles($sWorkingDirectory = @WorkingDir)
-	LogMessage("Called TidySimulationFiles($sWorkingDirectory = " & $sWorkingDirectory & ")", 5)
+	LogMessage("Called `TidySimulationFiles($sWorkingDirectory = " & $sWorkingDirectory & ")`", 5)
 
 	; Delete LORASR data files
 	If FileExists($sWorkingDirectory & "\bucent") Then DeleteFiles("bucent", $sWorkingDirectory)

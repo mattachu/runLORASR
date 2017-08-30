@@ -1,7 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Res_Comment=Created by M J Easton
 #AutoIt3Wrapper_Res_Description=Run LORASR for a given filename
-#AutoIt3Wrapper_Res_Fileversion=0.4.2.1
+#AutoIt3Wrapper_Res_Fileversion=0.4.2.2
 #AutoIt3Wrapper_Res_LegalCopyright=Creative Commons Attribution ShareAlike
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs ----------------------------------------------------------------------------
@@ -10,8 +10,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.04
- Modified:       2017.08.25
- Version:        0.4.2.1
+ Modified:       2017.08.30
+ Version:        0.4.2.2
 
 Script Function:
 	Run LORASR for a given filename
@@ -21,7 +21,7 @@ Script Function:
 #include "runLORASR.Functions.au3"
 #include "runLORASR.Run.au3"
 
-LogMessage("Started runLORASR version 0.4.2.1", 3)
+LogMessage("Started `runLORASR` version 0.4.2.2", 3)
 
 ; Declarations
 Local $iResult = 0
@@ -41,7 +41,7 @@ EndIf
 LogMessage("Checking command line parameters...", 2, "runLORASR")
 If $CmdLine[0] > 0 Then	$sRun = $CmdLine[1]
 If @error Then
-	ThrowError("Error checking runLORASR command line parameters", 1, "runLORASR", @error)
+	ThrowError("Error checking command line parameters", 1, "runLORASR", @error)
 	Exit 3
 EndIf
 
@@ -64,7 +64,7 @@ EndIf
 LogMessage("Setting up simulation environment...", 2, "runLORASR")
 $sSimulationProgramPath = SetupLORASR(@WorkingDir, $sProgramPath, $sSimulationProgram)
 If (Not $sSimulationProgramPath) Or @error Then
-	ThrowError("Could not set up simulation environment in folder " & @WorkingDir & ". Batch cancelled.", 1, "BatchLORASR", @error)
+	ThrowError("Could not set up simulation environment in folder `" & @WorkingDir & "`. Batch cancelled.", 1, "BatchLORASR", @error)
 	Exit 6
 EndIf
 

@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.08
- Modified:       2017.08.25
- Version:        0.4.2.1
+ Modified:       2017.08.30
+ Version:        0.4.2.2
 
  Script Function:
 	Work through a batch of input files and run LORASR for each one
@@ -23,11 +23,11 @@
 #include "runLORASR.Plots.au3"
 #include "runLORASR.Tidy.au3"
 
-LogMessage("Loaded runLORASR.Batch version 0.4.2.1", 3)
+LogMessage("Loaded `runLORASR.Batch` version 0.4.2.2", 3)
 
 ; Main function
 Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program Files (x86)\LORASR", $sSimulationProgram = "LORASR.exe", $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sPlotFile = "Plots.xlsx", $sInputFolder = "Input", $sOutputFolder = "Output", $sRunFolder = "Runs", $sIncompleteFolder = "Incomplete", $bCleanup = True)
-	LogMessage("Called BatchLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sProgramPath = " & $sProgramPath & ", $sSimulationProgram = " & $sSimulationProgram & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sResultsFile = " & $sResultsFile & ", $sPlotFile = " & $sPlotFile & ", $sInputFolder = " & $sInputFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ", $sIncompleteFolder = " & $sIncompleteFolder & ", $bCleanup = " & $bCleanup & ")", 5)
+	LogMessage("Called `BatchLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sProgramPath = " & $sProgramPath & ", $sSimulationProgram = " & $sSimulationProgram & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sResultsFile = " & $sResultsFile & ", $sPlotFile = " & $sPlotFile & ", $sInputFolder = " & $sInputFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ", $sIncompleteFolder = " & $sIncompleteFolder & ", $bCleanup = " & $bCleanup & ")`", 5)
 
 	; Declarations
 	Local $iResult = 0, $iCurrentInputFile = 0
@@ -55,7 +55,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 	EndIf
 
 	; Try to set up parameter sweep
-	LogMessage("Finding parameter sweep definition...", 2, "BatchLORASR")
+	LogMessage("Loading parameter sweep definition...", 2, "BatchLORASR")
 	If RunSweepLORASR($sWorkingDirectory, $sSweepFile, $sTemplateFile, $sResultsFile, $sInputFolder) Then
 		; If parameter sweep preparations were successful, the results file should already be created, so don't create it again.
 		$bCreateResultsFile = False
@@ -89,16 +89,16 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 	LogMessage("Setting up simulation environment...", 2, "BatchLORASR")
 	$sSimulationProgramPath = SetupLORASR($sWorkingDirectory, $sProgramPath, $sSimulationProgram)
 	If (Not $sSimulationProgramPath) Or @error Then
-		ThrowError("Could not set up simulation environment in folder " & $sWorkingDirectory & ". Batch cancelled.", 1, "BatchLORASR", @error)
+		ThrowError("Could not set up simulation environment in folder `" & $sWorkingDirectory & "`. Batch cancelled.", 1, "BatchLORASR", @error)
 		SetError(5)
 		Return 0
 	EndIf
 
 	; Get list of input files in working directory
-	LogMessage("Ready to begin processing input files...", 2, "BatchLORASR")
+	LogMessage("Ready to begin processing input files.", 2, "BatchLORASR")
 	$asInputFiles = _FileListToArray($sWorkingDirectory, "*.in")
 	If (UBound($asInputFiles) = 0) Or @error Then
-		ThrowError("No input files found in " & $sWorkingDirectory & " nor in input subfolder '" & $sInputFolder & "'. Batch cancelled.", 1, "BatchLORASR", @error)
+		ThrowError("No input files found in `" & $sWorkingDirectory & "` nor in input subfolder `" & $sInputFolder & "`. Batch cancelled.", 1, "BatchLORASR", @error)
 		SetError(6)
 		Return 0
 	EndIf
@@ -208,7 +208,7 @@ EndFunc
 
 ; Function to get input files from separate input folder if present
 Func FindInputFiles($sWorkingDirectory = @WorkingDir, $sInputFolder = "Input", $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sPlotFile = "Plots.xlsx", $sProgramPath = "C:\Program Files (x86)\LORASR")
-	LogMessage("Called FindInputFilesFindInputFiles($sWorkingDirectory = " & $sWorkingDirectory & ", $sInputFolder = " & $sInputFolder & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sPlotFile = " & $sPlotFile & ", $sProgramPath = " & $sProgramPath & ")", 5)
+	LogMessage("Called `FindInputFilesFindInputFiles($sWorkingDirectory = " & $sWorkingDirectory & ", $sInputFolder = " & $sInputFolder & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sPlotFile = " & $sPlotFile & ", $sProgramPath = " & $sProgramPath & ")`", 5)
 
 	; Declarations
 	Local $sFoundSweepFile = "", $sFoundTemplateFile = "", $sFoundInputFile = "", $sFoundPlotFile = ""
@@ -257,7 +257,7 @@ EndFunc
 
 ; Function to search for sweep parameter definition and call SweepLORASR if found
 Func RunSweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sInputFolder = "Input")
-	LogMessage("Called RunSweepLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sResultsFile = " & $sResultsFile & ", $sInputFolder = " & $sInputFolder & ")", 5)
+	LogMessage("Called `RunSweepLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sResultsFile = " & $sResultsFile & ", $sInputFolder = " & $sInputFolder & ")`", 5)
 
 	If FileExists($sWorkingDirectory & "\" & $sSweepFile) Then
 		If FileExists($sWorkingDirectory & "\" & $sTemplateFile) Then

@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.04
- Modified:       2017.08.25
- Version:        0.4.2.1
+ Modified:       2017.08.30
+ Version:        0.4.2.2
 
  Script Function:
 	Run LORASR for a given filename
@@ -15,7 +15,7 @@
 #include-once
 #include "runLORASR.Functions.au3"
 
-LogMessage("Loaded runLORASR.Run version 0.4.2.1", 3)
+LogMessage("Loaded `runLORASR.Run` version 0.4.2.2", 3)
 
 ; Global declarations
 Global $g_sMainWindowTitle = "LORASR PC Version"
@@ -25,7 +25,7 @@ Global $g_sGenericWindowTitle = "LORASR"
 
 ; Preparation
 Func SetupLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program Files (x86)\LORASR", $sSimulationProgram = "LORASR.exe")
-	LogMessage("Called SetupLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sProgramPath = " & $sProgramPath & ", $sSimulationProgram = " & $sSimulationProgram & ")", 5)
+	LogMessage("Called `SetupLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sProgramPath = " & $sProgramPath & ", $sSimulationProgram = " & $sSimulationProgram & ")`", 5)
 
 	; Declarations
 	Local $sSimulationProgramPath = ""
@@ -46,7 +46,7 @@ EndFunc
 
 ; Main function
 Func RunLORASR($sRun = "", $sWorkingDirectory = @WorkingDir, $sSimulationProgramPath = $sWorkingDirectory & "\LORASR.exe", $sInputFolder = "Input")
-	LogMessage("Called RunLORASR($sRun = " & $sRun & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sSimulationProgramPath = " & $sSimulationProgramPath & ", $sInputFolder = " & $sInputFolder & ")", 5)
+	LogMessage("Called `RunLORASR($sRun = " & $sRun & ", $sWorkingDirectory = " & $sWorkingDirectory & ", $sSimulationProgramPath = " & $sSimulationProgramPath & ", $sInputFolder = " & $sInputFolder & ")`", 5)
 
 	; Declarations
 	Local $sInputFile = ""
@@ -130,7 +130,7 @@ EndFunc   ;==>RunLORASR
 
 ; Function to load an input file
 Func LoadInputFile($sInputFile)
-	LogMessage("Called LoadInputFile($sInputFile = " & $sInputFile & ")", 5)
+	LogMessage("Called `LoadInputFile($sInputFile = " & $sInputFile & ")`", 5)
 
 	; Declarations
 	Local $hLORASR = 0
@@ -175,7 +175,7 @@ Func LoadInputFile($sInputFile)
 			Send("{ENTER}")
 			; Check for success
 			If Not WinActive($g_sMainWindowTitle) Then
-				ThrowError("Still could not load the input file.", 3, "LoadInputFile", @error)
+				ThrowError("Could not load the input file after multiple attempts.", 3, "LoadInputFile", @error)
 				SetError(4)
 				Return 0
 			EndIf
@@ -229,7 +229,7 @@ EndFunc
 
 ; Function to cancel failed attempt to load input file
 Func CancelLoadInputFile()
-	LogMessage("Called CancelLoadInputFile()", 5)
+	LogMessage("Called `CancelLoadInputFile()`", 5)
 
 	; Activate the correct window
 	WinActivate($g_sLoadInputFileWindowTitle)
@@ -274,7 +274,7 @@ EndFunc
 
 ; Function to cancel a crashed program
 Func FindError()
-	LogMessage("Called FindError()", 5)
+	LogMessage("Called `FindError()`", 5)
 
 	; Declarations
 	Local $hError = 0
@@ -305,7 +305,7 @@ EndFunc
 
 ; Function to activate and wait for a window, while catching an error state
 Func SafeActivate($sWindowTitle, $sWindowText = "", $iWaitTimeout = 10)
-	LogMessage("Called SafeActivate($sWindowTitle = " & $sWindowTitle & ", $sWindowText = " & $sWindowText & ", $iWaitTimeout = " & $iWaitTimeout & ")", 5)
+	LogMessage("Called `SafeActivate($sWindowTitle = " & $sWindowTitle & ", $sWindowText = " & $sWindowText & ", $iWaitTimeout = " & $iWaitTimeout & ")`", 5)
 
 	; Declarations
 	Local $hWindow = 0
@@ -313,17 +313,17 @@ Func SafeActivate($sWindowTitle, $sWindowText = "", $iWaitTimeout = 10)
 	Local $tLoopTimer = TimerInit()
 
 	; Keep trying until success or failure
-	LogMessage("Activating window " & $sWindowTitle, 4, "SafeActivate")
+	LogMessage("Activating window `" & $sWindowTitle & "`", 4, "SafeActivate")
 	While 1
 		$iLoopCount += 1
 		LogMessage("Loop " & $iLoopCount, 5, "SafeActivate")
-		LogMessage("Calling WinActivate(" & $sWindowTitle & ", " & $sWindowText & ")", 5, "SafeActivate")
+		LogMessage("Calling `WinActivate(" & $sWindowTitle & ", " & $sWindowText & ")`", 5, "SafeActivate")
 		; Try to activate requested window
 		$hWindow = WinActivate($sWindowTitle, $sWindowText)
-		LogMessage("$hWindow = " & $hWindow, 5, "SafeActivate")
+		LogMessage("Window handle: " & $hWindow, 5, "SafeActivate")
 		If $hWindow > 0 Then
 			; Successfully activated
-			LogMessage("Done.", 4, "SafeActivate")
+			LogMessage("Done.", 5, "SafeActivate")
 			Return $hWindow
 		Else
 			LogMessage("Not done...", 5, "SafeActivate")
@@ -340,7 +340,7 @@ Func SafeActivate($sWindowTitle, $sWindowText = "", $iWaitTimeout = 10)
 		LogMessage("Waking", 5, "SafeActivate")
 		; Check for timeout
 		If TimerDiff($tLoopTimer) > $iWaitTimeout * 1000 Then
-			ThrowError("Timeout in SafeActivate(" & $sWindowTitle & ", " & $sWindowText & ")", 3, "SafeActivate", @error)
+			ThrowError("Timeout in `SafeActivate(" & $sWindowTitle & ", " & $sWindowText & ")`", 3, "SafeActivate", @error)
 			SetError(2)
 			Return 0
 		EndIf
@@ -353,7 +353,7 @@ EndFunc   ;==>SafeActivate
 
 ; Function to force LORASR.exe to quit
 Func KillLORASR()
-	LogMessage("Called KillLORASR()", 5)
+	LogMessage("Called `KillLORASR()`", 5)
 
 	; Declarations
 	Local $iTries = 0, $iMaxTries = 10

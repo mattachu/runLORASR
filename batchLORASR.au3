@@ -1,7 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Res_Comment=Created by M J Easton
 #AutoIt3Wrapper_Res_Description=Work through a batch of input files and run LORASR for each one
-#AutoIt3Wrapper_Res_Fileversion=0.4.2.1
+#AutoIt3Wrapper_Res_Fileversion=0.4.2.2
 #AutoIt3Wrapper_Res_LegalCopyright=Creative Commons Attribution ShareAlike
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs ----------------------------------------------------------------------------
@@ -10,8 +10,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.04
- Modified:       2017.08.25
- Version:        0.4.2.1
+ Modified:       2017.08.30
+ Version:        0.4.2.2
 
  Script Function:
 	Work through a batch of input files and run LORASR for each one
@@ -21,7 +21,7 @@
 #include "runLORASR.Functions.au3"
 #include "runLORASR.Batch.au3"
 
-LogMessage("Starting batchLORASR version 0.4.2.1", 3)
+LogMessage("Starting `batchLORASR` version 0.4.2.2", 3)
 
 ; Declarations
 Local $iResult = 0
@@ -51,7 +51,7 @@ If @WorkingDir = $sProgramPath Then
 		Exit 4
 	EndIf
 EndIf
-LogMessage("Running batch in folder " & @WorkingDir, 3,  "batchLORASR")
+LogMessage("Running batch in folder `" & @WorkingDir & "`", 3,  "batchLORASR")
 
 ; Call the main run function
 LogMessage("Calling main batch function.", 2, "batchLORASR")

@@ -76,7 +76,7 @@ Func SaveAllResults($sWorkingDirectory = @WorkingDir, $sResultsFile = "Batch res
 		$sRun = $asRuns[$iCurrentRun]
 		$iResult = SaveRunResults($sRun, $sWorkingDirectory, $sResultsFile, $sInputFolder, $sRunFolder)
 		If (Not $iResult) Or @error Then
-			LogMessage("Error saving results for run " & $sRun & ". Attempting to continue.", 3, "SaveAllResults")
+			LogMessage("Error saving results for run *" & $sRun & ".* Attempting to continue.", 3, "SaveAllResults")
 			SetError(0)
 			ContinueLoop
 		EndIf
@@ -167,7 +167,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 	LogMessage("Searching for input files for run " & $sRun, 4, "SaveRunResults")
 	$sInputFile = FindFile($sRun & ".in", $sWorkingDirectory, $sWorkingDirectory & "\" & $sInputFolder, False)
 	If (Not $sInputFile) Or @error Then
-		ThrowError("Error getting input file for run " & $sRun, 2, "SaveRunResults", @error)
+		ThrowError("Error getting input file for run *" & $sRun & "*", 2, "SaveRunResults", @error)
 		SetError(1)
 		Return 0
 	EndIf
@@ -186,14 +186,14 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
 		EndIf
 	EndIf
 	If (UBound($asOutputFiles) = 0) Or @error Then
-		ThrowError("Error getting list of output files for run " & $sRun, 2, "SaveRunResults", @error)
+		ThrowError("Error getting list of output files for run *" & $sRun & "*", 2, "SaveRunResults", @error)
 		SetError(2)
 		Return 0
 	EndIf
 	; Read in most recent output file, assuming files are sorted by date and time based on filename
 	$sOutputFile = $asOutputFiles[UBound($asOutputFiles)-1]
 	If (Not $sOutputFile) Or @error Then
-		ThrowError("Error finding latest output file for run " & $sRun, 2, "SaveRunResults", @error)
+		ThrowError("Error finding latest output file for run *" & $sRun & "*", 2, "SaveRunResults", @error)
 		SetError(3)
 		Return 0
 	EndIf

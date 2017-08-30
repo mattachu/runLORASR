@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.12
  Modified:       2017.08.30
- Version:        0.4.2.3
+ Version:        0.4.2.4
 
  Script Function:
 	Functions used by runLORASR
@@ -26,7 +26,7 @@ Global $g_sLogFile = "runLORASR.log"
 
 ; Create new log file on first open
 CreateLogFile($g_sLogFile, @WorkingDir)
-LogMessage("Loaded `runLORASR.Functions` version 0.4.2.3", 3)
+LogMessage("Loaded `runLORASR.Functions` version 0.4.2.4", 3)
 
 ; Function to read settings from runLORASR.ini file
 Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProgram, ByRef $sSweepFile, ByRef $sTemplateFile, ByRef $sResultsFile, ByRef $sPlotFile, ByRef $sInputFolder, ByRef $sOutputFolder, ByRef $sRunFolder, ByRef $sIncompleteFolder, ByRef $bCleanup)
@@ -99,30 +99,35 @@ Func FindFile($sFindFileName, $sWorkingDir = @WorkingDir, $sMasterDir = $sWorkin
 
 	; Declarations
 	Local $sFoundFile = ""
+	Local $asFoundFiles
+	Local $iCurrentFile = 0
 
 	; Look in working directory first
 	If FileExists($sWorkingDir & "\" & $sFindFileName) Then
-		LogMessage("File found in working directory", 5, "FindFile")
+		LogMessage("Found in working directory", 5, "FindFile")
 		$sFoundFile = $sWorkingDir & "\" & $sFindFileName
+		$asFoundFiles = _FileListToArray($sWorkingDir, $sFindFileName, $FLTA_FILES, False)
 	Else
 		; If not found, check master directory
 		If FileExists($sMasterDir & "\" & $sFindFileName) Then
-			LogMessage("File found in master directory", 5, "FindFile")
+			LogMessage("Found in master directory", 5, "FindFile")
 			If $bCopy Then
-				LogMessage("Copying file to working directory", 4, "FindFile")
+				LogMessage("Copying to working directory", 4, "FindFile")
 				; Copy the master to the working directory
 				If FileCopy($sMasterDir & "\" & $sFindFileName, $sWorkingDir & "\" & $sFindFileName) Then
 					; Report the copied file location
 					$sFoundFile = $sWorkingDir & "\" & $sFindFileName
+					$asFoundFiles = _FileListToArray($sWorkingDir, $sFindFileName, $FLTA_FILES, False)
 				Else
 					; Return failure: copy failed
-					ThrowError("Could not copy file from `" & $sMasterDir & "\" & $sFindFileName & "` to `" & $sWorkingDir & "\" & $sFindFileName & "`", 3, "FindFile", @error)
+					ThrowError("Could not copy from `" & $sMasterDir & "\" & $sFindFileName & "` to `" & $sWorkingDir & "\" & $sFindFileName & "`", 3, "FindFile", @error)
 					SetError(2)
 					Return 0
 				EndIf
 			Else
 				; Report the master file location
 				$sFoundFile = $sMasterDir & "\" & $sFindFileName
+				$asFoundFiles = _FileListToArray($sMasterDir, $sFindFileName, $FLTA_FILES, False)
 			EndIf
 		Else
 			; Return failure: file not found
@@ -132,8 +137,17 @@ Func FindFile($sFindFileName, $sWorkingDir = @WorkingDir, $sMasterDir = $sWorkin
 		EndIf
 	EndIf
 
-	; Return result
-	LogMessage("Found file: `" & $sFoundFile & "`", 3, "FindFile")
+	; Log result (one file at a time)
+	If StringInStr($sFindFileName, "*") Then
+		LogMessage("Found " & UBound($asFoundFiles) - 1 & " files matching `" & $sFoundFile & "`", 3, "FindFile")
+		For $iCurrentFile = 1 To UBound($asFoundFiles) - 1
+			LogMessage("Found file: `" & $asFoundFiles[$iCurrentFile] & "`", 4, "FindFile")
+		Next ; $iCurrentFile
+	Else
+		LogMessage("Found file: `" & $sFoundFile & "`", 3, "FindFile")
+	EndIf
+
+	; Return result (with wildcards if supplied)
 	Return $sFoundFile
 
 EndFunc

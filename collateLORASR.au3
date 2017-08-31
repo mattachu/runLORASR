@@ -1,7 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Res_Comment=Created by M J Easton
 #AutoIt3Wrapper_Res_Description=Work through a batch of input files and run LORASR for each one
-#AutoIt3Wrapper_Res_Fileversion=0.4.2.2
+#AutoIt3Wrapper_Res_Fileversion=0.4.2.3
 #AutoIt3Wrapper_Res_LegalCopyright=Creative Commons Attribution ShareAlike
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs ----------------------------------------------------------------------------
@@ -10,8 +10,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.25
- Modified:       2017.08.30
- Version:        0.4.2.2
+ Modified:       2017.08.31
+ Version:        0.4.2.3
 
  Script Function:
 	Collate transmission results from a set of LORASR output files
@@ -21,7 +21,7 @@
 #include "runLORASR.Functions.au3"
 #include "runLORASR.Results.au3"
 
-LogMessage("Starting `collateLORASR` version 0.4.2.2", 3)
+LogMessage("Starting `collateLORASR` version 0.4.2.3", 3)
 
 ; Declarations
 Local $iResult = 0

@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.04
  Modified:       2017.08.30
- Version:        0.4.2.2
+ Version:        0.4.2.3
 
  Script Function:
 	Run LORASR for a given filename
@@ -15,7 +15,7 @@
 #include-once
 #include "runLORASR.Functions.au3"
 
-LogMessage("Loaded `runLORASR.Run` version 0.4.2.2", 3)
+LogMessage("Loaded `runLORASR.Run` version 0.4.2.3", 3)
 
 ; Global declarations
 Global $g_sMainWindowTitle = "LORASR PC Version"
@@ -281,13 +281,13 @@ Func FindError()
 	Local $bFoundError = False
 
 	; Check if error window exists
-	LogMessage("Checking for error", 5, "CancelCrashedProgram")
+	LogMessage("Checking for error", 5, "FindError")
 	$hError = WinActivate("LORASR.exe", "stopped working")
 
 	; If found, try to exit the error message
 	If $hError > 0 Then
 		$bFoundError = True
-		LogMessage("Error message encountered. Trying to close error message box", 3, "CancelCrashedProgram")
+		LogMessage("Error message encountered. Trying to close error message box", 3, "FindError")
 		; Send keystrokes to close window
 		Sleep(500)
 		Send("{ENTER}")

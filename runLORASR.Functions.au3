@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.12
- Modified:       2017.08.30
- Version:        0.4.2.5
+ Modified:       2017.09.04
+ Version:        0.4.2.6
 
  Script Function:
     Functions used by runLORASR
@@ -26,7 +26,7 @@ Global $g_sLogFile = "runLORASR.log"
 
 ; Create new log file on first open
 CreateLogFile($g_sLogFile, @WorkingDir)
-LogMessage("Loaded `runLORASR.Functions` version 0.4.2.5", 3)
+LogMessage("Loaded `runLORASR.Functions` version 0.4.2.6", 3)
 
 ; Function to read settings from runLORASR.ini file
 Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProgram, ByRef $sSweepFile, ByRef $sTemplateFile, ByRef $sResultsFile, ByRef $sPlotFile, ByRef $sInputFolder, ByRef $sOutputFolder, ByRef $sRunFolder, ByRef $sIncompleteFolder, ByRef $bCleanup)
@@ -311,6 +311,11 @@ Func LogMessage($sMessageText, $iImportance = 3, $sFunctionName = "", $sLogFile 
             $sLogMessage = $sMessageText
         EndIf
 
+        ; Replace the full path to the working directory with a shortened form, except for certain messages
+        If Not ExplicitWorkingDirectory($sLogMessage) Then
+            $sLogMessage = StripWorkingDirectory($sLogMessage, $sWorkingDirectory)
+        EndIf
+
         ; Start of the program gets special handling in Markdown version
         $asResult = StringRegExp($sMessageText, "Starting `([a-zA-Z]+LORASR)`", 1)
         If UBound($asResult) > 0 Then
@@ -485,5 +490,21 @@ Func Heading($sText)
 
     ; Return modified string
     Return $sText
+
+EndFunc
+
+; Function to check whether particular text is directly mentioning/setting the working directory
+Func ExplicitWorkingDirectory($sText)
+    ; No logging as this is part of the logging process
+
+    Return (StringInStr($sText, "working") And (StringInStr($sText, "folder") Or StringInStr($sText, "directory")))
+
+EndFunc
+
+; Function to replace the full path to the working directory with a shortened version
+Func StripWorkingDirectory($sText, $sWorkingDirectory = @WorkingDir)
+    ; No logging as this is part of the logging process
+
+    Return StringReplace($sText, $sWorkingDirectory, ".")
 
 EndFunc

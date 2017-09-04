@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.08.25
  Modified:       2017.09.04
- Version:        0.4.2.2
+ Version:        0.4.2.3
 
  Script Function:
     Extract transmission results from LORASR output files
@@ -19,7 +19,7 @@
 #include <StringConstants.au3>
 #include "runLORASR.Functions.au3"
 
-LogMessage("Loaded `runLORASR.Results` version 0.4.2.2", 3)
+LogMessage("Loaded `runLORASR.Results` version 0.4.2.3", 3)
 
 ; Function to loop through all output files and save results
 Func SaveAllResults($sWorkingDirectory = @WorkingDir, $sResultsFile = "Batch results.csv", $sInputFolder = "Input", $sRunFolder = "Runs")
@@ -198,7 +198,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
         SetError(3)
         Return 0
     EndIf
-    LogMessage("Using output file `" & $sOutputFile & "`", 4, "SaveRunResults")
+    LogMessage("Using output file `" & $sOutputFolder & "\" & $sOutputFile & "`", 4, "SaveRunResults")
 
     ; Read in input file
     LogMessage("Reading input file `" & $sInputFile & "`", 4, "SaveRunResults")
@@ -227,7 +227,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
     EndIf
 
     ; Read in output file
-    LogMessage("Reading output file `" & $sOutputFile & "`", 4, "SaveRunResults")
+    LogMessage("Reading output file `" & $sOutputFolder & "\" & $sOutputFile & "`", 4, "SaveRunResults")
     $asFileContents = FileReadToArray($sOutputFolder & "\" & $sOutputFile)
     If (UBound($asFileContents) = 0) Or @error Then
         ThrowError("Error loading data from output file " & $sOutputFile, 2, "SaveRunResults", @error)

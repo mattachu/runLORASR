@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.04
  Modified:       2017.08.30
- Version:        0.4.2.3
+ Version:        0.4.2.4
 
  Script Function:
 	Run LORASR for a given filename
@@ -15,7 +15,7 @@
 #include-once
 #include "runLORASR.Functions.au3"
 
-LogMessage("Loaded `runLORASR.Run` version 0.4.2.3", 3)
+LogMessage("Loaded `runLORASR.Run` version 0.4.2.4", 3)
 
 ; Global declarations
 Global $g_sMainWindowTitle = "LORASR PC Version"
@@ -136,6 +136,7 @@ Func LoadInputFile($sInputFile)
 	Local $hLORASR = 0
 
 	; Activate the main window
+	LogMessage("Activating LORASR main window.", 5, "LoadInputFile")
 	$hLORASR = SafeActivate($g_sMainWindowTitle)
 	If $hLORASR = 0 Then
 		ThrowError("Could not activate LORASR.", 3, "LoadInputFile", @error)
@@ -144,10 +145,12 @@ Func LoadInputFile($sInputFile)
 	EndIf
 
 	; Send keystrokes to File > Open
+	LogMessage("Sending open file signal.", 5, "LoadInputFile")
 	Send("!f")
 	Send("o")
 
 	; Wait for file open dialog to appear
+	LogMessage("Activating file open dialog window.", 5, "LoadInputFile")
 	$hLORASR = SafeActivate($g_sLoadInputFileWindowTitle)
 	If $hLORASR = 0 Then
 		ThrowError("File open dialog not responding.", 3, "LoadInputFile", @error)
@@ -157,23 +160,30 @@ Func LoadInputFile($sInputFile)
 
 	; Fill in the full path and filename
 	Sleep(100)
+	LogMessage("Sending input file path.", 5, "LoadInputFile")
 	Send($sInputFile)
 	Send("{ENTER}")
 
 	; Check for errors
+	LogMessage("Checking for success.", 5, "LoadInputFile")
 	If WinActivate($g_sLoadInputFileWindowTitle) Then
 		; Try to cancel process and retry
 		LogMessage("Could not load the input file. Trying again...", 3, "LoadInputFile")
 		If CancelLoadInputFile() Then
 			; Try again
+			LogMessage("Activating LORASR main window.", 5, "LoadInputFile")
 			SafeActivate($g_sMainWindowTitle)
+			LogMessage("Sending open file signal.", 5, "LoadInputFile")
 			Send("!f")
 			Send("o")
+			LogMessage("Activating file open dialog window.", 5, "LoadInputFile")
 			SafeActivate($g_sLoadInputFileWindowTitle)
 			Sleep(100)
+			LogMessage("Sending input file path.", 5, "LoadInputFile")
 			Send($sInputFile)
 			Send("{ENTER}")
 			; Check for success
+			LogMessage("Checking for success.", 5, "LoadInputFile")
 			If Not WinActive($g_sMainWindowTitle) Then
 				ThrowError("Could not load the input file after multiple attempts.", 3, "LoadInputFile", @error)
 				SetError(4)
@@ -201,6 +211,7 @@ Func RunCalculation()
 	Local $iCalculationTimeout = 60
 
 	; Activate the main window
+	LogMessage("Activating LORASR main window.", 5, "RunCalculation")
 	$hLORASR = SafeActivate($g_sMainWindowTitle)
 	If $hLORASR = 0 Then
 		ThrowError("Could not activate LORASR.", 3, "RunCalculation", @error)
@@ -209,10 +220,12 @@ Func RunCalculation()
 	EndIf
 
 	; Send keystrokes to Run > Calculation
+	LogMessage("Sending start calculation signal.", 5, "RunCalculation")
 	Send("!r")
 	Send("c")
 
 	; Wait for the calculation window to be complete (transmission ratio is the last line of ouptut)
+	LogMessage("Activating LORASR console window and waiting for run result.", 5, "RunCalculation")
 	$hLORASR = SafeActivate($g_sConsoleWindowTitle, "TRATIO=", $iCalculationTimeout)
 	If $hLORASR = 0 Then
 		ThrowError("Could not finish the calculation.", 3, "RunCalculation", @error)

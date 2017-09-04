@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.04
- Modified:       2017.08.30
- Version:        0.4.2.4
+ Modified:       2017.09.04
+ Version:        0.4.2.5
 
  Script Function:
     Run LORASR for a given filename
@@ -15,7 +15,7 @@
 #include-once
 #include "runLORASR.Functions.au3"
 
-LogMessage("Loaded `runLORASR.Run` version 0.4.2.4", 3)
+LogMessage("Loaded `runLORASR.Run` version 0.4.2.5", 3)
 
 ; Global declarations
 Global $g_sMainWindowTitle = "LORASR PC Version"
@@ -326,7 +326,7 @@ Func SafeActivate($sWindowTitle, $sWindowText = "", $iWaitTimeout = 10)
     Local $tLoopTimer = TimerInit()
 
     ; Keep trying until success or failure
-    LogMessage("Activating window `" & $sWindowTitle & "`", 4, "SafeActivate")
+    LogMessage("Activating window `" & $sWindowTitle & "`", 5, "SafeActivate")
     While 1
         $iLoopCount += 1
         LogMessage("Loop " & $iLoopCount, 5, "SafeActivate")

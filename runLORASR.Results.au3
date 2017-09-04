@@ -106,7 +106,7 @@ Func CreateResultsFile($asParameters, $sWorkingDirectory = @WorkingDir, $sResult
     ; Backup existing results file
     If FileExists($sWorkingDirectory & "\" & $sResultsFile) Then
         FileMove($sWorkingDirectory & "\" & $sResultsFile, $sWorkingDirectory & "\" & $sResultsFile & ".old", $FC_OVERWRITE)
-        LogMessage("Backed up old results file to `" & $sWorkingDirectory & "\" & $sResultsFile & ".old`", 4, "CreateResultsFile")
+        LogMessage("Backed up old results file to `" & $sResultsFile & ".old`", 4, "CreateResultsFile")
     EndIf
 
     ; Create new results file
@@ -117,7 +117,7 @@ Func CreateResultsFile($asParameters, $sWorkingDirectory = @WorkingDir, $sResult
         SetError(1)
         Return 0
     EndIf
-    LogMessage("Created new results file `" & $sWorkingDirectory & "\" & $sResultsFile & "`", 3, "CreateResultsFile")
+    LogMessage("Created new results file `" & $sResultsFile & "`", 3, "CreateResultsFile")
 
     ; Basic headers
     $sHeader = "Run date, Run time, Transmission (%), Core particles (%)"

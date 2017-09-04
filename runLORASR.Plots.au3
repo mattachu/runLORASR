@@ -296,7 +296,7 @@ Func PlotData($sDataType, ByRef $oWorkbook, $sWorkingDirectory = @WorkingDir)
     Local $asData
 
     ; Get file settings
-    LogMessage("Getting file settings for `" & $sDataType & "`", 5, "PlotData")
+    LogMessage("Getting file settings for *" & $sDataType & "*", 5, "PlotData")
     $iResult = GetFileSettings($sDataType, $sDataFile1, $iDataStart1, $iDataEnd1, $sDataFile2, $iDataStart2, $iDataEnd2, $iWorksheet, $sDataLocation1, $sDataLocation2)
     If (Not $iResult) Or @error Then
         ThrowError("Could not set plot data type.", 3, "PlotData", @error)

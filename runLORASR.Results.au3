@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.25
- Modified:       2017.08.30
- Version:        0.4.2.1
+ Modified:       2017.09.04
+ Version:        0.4.2.2
 
  Script Function:
     Extract transmission results from LORASR output files
@@ -19,7 +19,7 @@
 #include <StringConstants.au3>
 #include "runLORASR.Functions.au3"
 
-LogMessage("Loaded `runLORASR.Results` version 0.4.2.1", 3)
+LogMessage("Loaded `runLORASR.Results` version 0.4.2.2", 3)
 
 ; Function to loop through all output files and save results
 Func SaveAllResults($sWorkingDirectory = @WorkingDir, $sResultsFile = "Batch results.csv", $sInputFolder = "Input", $sRunFolder = "Runs")
@@ -173,7 +173,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
     EndIf
 
     ; Get list of output files for current run
-    LogMessage("Searching for output files for run " & $sRun, 4, "SaveRunResults")
+    LogMessage("Searching for output files for run *" & $sRun & "*", 4, "SaveRunResults")
     ; Try working directory first
     $sOutputFolder = $sWorkingDirectory
     $asOutputFiles = _FileListToArray($sOutputFolder, $sRun & "-*.out")
@@ -191,12 +191,14 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
         Return 0
     EndIf
     ; Read in most recent output file, assuming files are sorted by date and time based on filename
+    If UBound($asOutputFiles) > 2 Then LogMessage("Found " & UBound($asOutputFiles)-1 & " output files for run *" & $sRun & "*", 5, "SaveRunResults")
     $sOutputFile = $asOutputFiles[UBound($asOutputFiles)-1]
     If (Not $sOutputFile) Or @error Then
         ThrowError("Error finding latest output file for run *" & $sRun & "*", 2, "SaveRunResults", @error)
         SetError(3)
         Return 0
     EndIf
+    LogMessage("Using output file `" & $sOutputFile & "`", 4, "SaveRunResults")
 
     ; Read in input file
     LogMessage("Reading input file `" & $sInputFile & "`", 4, "SaveRunResults")

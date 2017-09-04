@@ -14,7 +14,7 @@
  Version:        0.4.2.3
 
  Script Function:
-	Work through a batch of input files and run LORASR for each one
+    Work through a batch of input files and run LORASR for each one
 
 #ce ----------------------------------------------------------------------------
 
@@ -33,23 +33,23 @@ Local $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResults
 Local $bCleanup
 $iResult = GetSettings(@WorkingDir, $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResultsFile, $sPlotFile, $sInputFolder, $sOutputFolder, $sRunFolder, $sIncompleteFolder, $bCleanup)
 If (Not $iResult) Or @error Then
-	ThrowError("Error loading global settings", 1, "batchLORASR")
-	Exit 2
+    ThrowError("Error loading global settings", 1, "batchLORASR")
+    Exit 2
 EndIf
 
 ; Get working directory if run from program directory
 LogMessage("Checking current directory...",2,  "batchLORASR")
 If @WorkingDir = $sProgramPath Then
-	$sNewFolder = FileSelectFolder("Please select the working directory in which to run LORASR.", "")
-	If @error Then
-		ThrowError("Could not select working directory", 1, "batchLORASR", @error)
-		Exit 3
-	EndIf
-	FileChangeDir($sNewFolder)
-	If @error Then
-		ThrowError("Could not access working directory", 1, "batchLORASR", @error)
-		Exit 4
-	EndIf
+    $sNewFolder = FileSelectFolder("Please select the working directory in which to run LORASR.", "")
+    If @error Then
+        ThrowError("Could not select working directory", 1, "batchLORASR", @error)
+        Exit 3
+    EndIf
+    FileChangeDir($sNewFolder)
+    If @error Then
+        ThrowError("Could not access working directory", 1, "batchLORASR", @error)
+        Exit 4
+    EndIf
 EndIf
 LogMessage("Running batch in folder `" & @WorkingDir & "`", 3,  "batchLORASR")
 
@@ -59,9 +59,9 @@ $iResult = BatchLORASR(@WorkingDir, $sProgramPath, $sSimulationProgram, $sSweepF
 
 ; Exit program
 If ($iResult = 1) And (Not @error) Then
-	LogMessage("Batch complete.", 1, "batchLORASR")
-	Exit 0
+    LogMessage("Batch complete.", 1, "batchLORASR")
+    Exit 0
 Else
-	LogMessage("Batch incomplete.", 1, "batchLORASR")
-	Exit 1
+    LogMessage("Batch incomplete.", 1, "batchLORASR")
+    Exit 1
 EndIf

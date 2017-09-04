@@ -14,7 +14,7 @@
  Version:        0.4.2.3
 
  Script Function:
-	Create a batch of input files from a batch definition file and a template
+    Create a batch of input files from a batch definition file and a template
 
 #ce ----------------------------------------------------------------------------
 
@@ -33,23 +33,23 @@ Local $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResults
 Local $bCleanup
 $iResult = GetSettings(@WorkingDir, $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResultsFile, $sPlotFile, $sInputFolder, $sOutputFolder, $sRunFolder, $sIncompleteFolder, $bCleanup)
 If (Not $iResult) Or @error Then
-	ThrowError("Error loading global settings", 1, "sweepLORASR", @error)
-	Exit 1
+    ThrowError("Error loading global settings", 1, "sweepLORASR", @error)
+    Exit 1
 EndIf
 
 ; Get working directory if run from program directory
 LogMessage("Checking current directory...", 2, "sweepLORASR")
 If @WorkingDir = $sProgramPath Then
-	$sFolder = FileSelectFolder("Please select the working directory that holds the sweep definition files.", "")
-	If @error Then
-		ThrowError("Could not select working directory", 1, "sweepLORASR", @error)
-		Exit 2
-	EndIf
-	FileChangeDir($sFolder)
-	If @error Then
-		ThrowError("Could not access working directory", 1, "sweepLORASR", @error)
-		Exit 3
-	EndIf
+    $sFolder = FileSelectFolder("Please select the working directory that holds the sweep definition files.", "")
+    If @error Then
+        ThrowError("Could not select working directory", 1, "sweepLORASR", @error)
+        Exit 2
+    EndIf
+    FileChangeDir($sFolder)
+    If @error Then
+        ThrowError("Could not access working directory", 1, "sweepLORASR", @error)
+        Exit 3
+    EndIf
 EndIf
 
 ; Copy sweep files if in subfolder
@@ -59,8 +59,8 @@ LogMessage("Checking subfolders...", 2, "sweepLORASR")
 LogMessage("Starting preparations for parameter sweep...", 2, "sweepLORASR")
 $iResult = SweepLORASR(@WorkingDir, $sSweepFile, $sTemplateFile, $sResultsFile, $sInputFolder)
 If (Not $iResult) Or @error Then
-	ThrowError("Error during parameter sweep.", 1, "sweepLORASR", @error)
-	Exit 4
+    ThrowError("Error during parameter sweep.", 1, "sweepLORASR", @error)
+    Exit 4
 EndIf
 
 ; Exit program

@@ -14,7 +14,7 @@
  Version:        0.4.2.3
 
  Script Function:
-	Tidy up files from a batch run of LORASR
+    Tidy up files from a batch run of LORASR
 
 #ce ----------------------------------------------------------------------------
 
@@ -32,29 +32,29 @@ LogMessage("Loading global settings...", 2, "tidyLORASR")
 Local $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResultsFile, $sPlotFile, $sInputFolder, $sOutputFolder, $sRunFolder, $sIncompleteFolder
 Local $bCleanup
 If Not GetSettings(@WorkingDir, $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResultsFile, $sPlotFile, $sInputFolder, $sOutputFolder, $sRunFolder, $sIncompleteFolder, $bCleanup) Then
-	ThrowError("Could not get global settings. Exiting program.", 1, "tidyLORASR", @error)
-	Exit 2
+    ThrowError("Could not get global settings. Exiting program.", 1, "tidyLORASR", @error)
+    Exit 2
 EndIf
 
 ; Don't do anything if not meant to clean up
 If Not $bCleanup Then
-	LogMessage("Cleanup option switch off, exiting.", 2, "tidyLORASR")
-	Exit 0
+    LogMessage("Cleanup option switch off, exiting.", 2, "tidyLORASR")
+    Exit 0
 EndIf
 
 ; Get working directory if run from program directory
 LogMessage("Checking current directory...", 2, "tidyLORASR")
 If @WorkingDir = $sProgramPath Then
-	$sRun = FileSelectFolder("Please select the working directory that holds the files to be cleaned up.", "")
-	If @error Then
-		ThrowError("Could not select working directory", 1, "tidyLORASR", @error)
-		Exit 3
-	EndIf
-	FileChangeDir($sRun)
-	If @error Then
-		ThrowError("Could not access working directory", 1, "tidyLORASR", @error)
-		Exit 4
-	EndIf
+    $sRun = FileSelectFolder("Please select the working directory that holds the files to be cleaned up.", "")
+    If @error Then
+        ThrowError("Could not select working directory", 1, "tidyLORASR", @error)
+        Exit 3
+    EndIf
+    FileChangeDir($sRun)
+    If @error Then
+        ThrowError("Could not access working directory", 1, "tidyLORASR", @error)
+        Exit 4
+    EndIf
 EndIf
 
 ; Tidy up input files for each run: completed runs go back in the input folder, incomplete runs are moved to an incomplete folder for later processing.
@@ -67,9 +67,9 @@ If Not TidyBatchFiles(@WorkingDir, $sSimulationProgram, $sSweepFile, $sTemplateF
 
 ; Report completion
 If @error or $bError Then
-	LogMessage("Finished tidying with some errors.", 1, "tidyLORASR")
+    LogMessage("Finished tidying with some errors.", 1, "tidyLORASR")
 Else
-	LogMessage("Finished tidying.", 1, "tidyLORASR")
+    LogMessage("Finished tidying.", 1, "tidyLORASR")
 EndIf
 
 ; End program

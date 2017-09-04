@@ -14,7 +14,7 @@
  Version:        0.4.2.3
 
 Script Function:
-	Run LORASR for a given filename
+    Run LORASR for a given filename
 
 #ce ----------------------------------------------------------------------------
 
@@ -33,39 +33,39 @@ Local $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResults
 Local $bCleanup
 $iResult = GetSettings(@WorkingDir, $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResultsFile, $sPlotFile, $sInputFolder, $sOutputFolder, $sRunFolder, $sIncompleteFolder, $bCleanup)
 If (Not $iResult) Or @error Then
-	ThrowError("Error loading global settings", 1, "runLORASR", @error)
-	Exit 2
+    ThrowError("Error loading global settings", 1, "runLORASR", @error)
+    Exit 2
 EndIf
 
 ; Check command line parameters
 LogMessage("Checking command line parameters...", 2, "runLORASR")
-If $CmdLine[0] > 0 Then	$sRun = $CmdLine[1]
+If $CmdLine[0] > 0 Then    $sRun = $CmdLine[1]
 If @error Then
-	ThrowError("Error checking command line parameters", 1, "runLORASR", @error)
-	Exit 3
+    ThrowError("Error checking command line parameters", 1, "runLORASR", @error)
+    Exit 3
 EndIf
 
 ; Get working directory if run from program directory
 LogMessage("Checking current directory...", 2, "runLORASR")
 If @WorkingDir = $sProgramPath Then
-	$sNewFolder = FileSelectFolder("Please select the working directory in which to run LORASR.", "")
-	If @error Then
-		ThrowError("Could not select working directory", 1, "runLORASR", @error)
-		Exit 4
-	EndIf
-	FileChangeDir($sNewFolder)
-	If @error Then
-		ThrowError("Could not access working directory", 1, "runLORASR", @error)
-		Exit 5
-	EndIf
+    $sNewFolder = FileSelectFolder("Please select the working directory in which to run LORASR.", "")
+    If @error Then
+        ThrowError("Could not select working directory", 1, "runLORASR", @error)
+        Exit 4
+    EndIf
+    FileChangeDir($sNewFolder)
+    If @error Then
+        ThrowError("Could not access working directory", 1, "runLORASR", @error)
+        Exit 5
+    EndIf
 EndIf
 
 ; Set up the simulation environment
 LogMessage("Setting up simulation environment...", 2, "runLORASR")
 $sSimulationProgramPath = SetupLORASR(@WorkingDir, $sProgramPath, $sSimulationProgram)
 If (Not $sSimulationProgramPath) Or @error Then
-	ThrowError("Could not set up simulation environment in folder `" & @WorkingDir & "`. Batch cancelled.", 1, "BatchLORASR", @error)
-	Exit 6
+    ThrowError("Could not set up simulation environment in folder `" & @WorkingDir & "`. Batch cancelled.", 1, "BatchLORASR", @error)
+    Exit 6
 EndIf
 
 ; Call the main run function
@@ -75,13 +75,13 @@ LogMessage("Run result: " & $iResult, 2, "runLORASR")
 
 ; Try once more if failed
 If Not ($iResult = 1) Then
-	LogMessage("Run failed. Trying again...", 1, "runLORASR")
-	$iResult = RunLORASR($sRun, @WorkingDir, $sSimulationProgramPath, $sInputFolder)
-	LogMessage("Run result: " & $iResult, 2, "runLORASR")
-	If Not ($iResult = 1) Then
-		LogMessage("Run failed again.", 1, "runLORASR")
-		Exit 7
-	EndIf
+    LogMessage("Run failed. Trying again...", 1, "runLORASR")
+    $iResult = RunLORASR($sRun, @WorkingDir, $sSimulationProgramPath, $sInputFolder)
+    LogMessage("Run result: " & $iResult, 2, "runLORASR")
+    If Not ($iResult = 1) Then
+        LogMessage("Run failed again.", 1, "runLORASR")
+        Exit 7
+    EndIf
 EndIf
 
 ; Exit program

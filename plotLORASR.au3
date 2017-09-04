@@ -14,7 +14,7 @@
  Version:        0.4.2.3
 
  Script Function:
-	Copy data from LORASR output files to Excel plotting spreadsheet
+    Copy data from LORASR output files to Excel plotting spreadsheet
 
 #ce ----------------------------------------------------------------------------
 
@@ -33,43 +33,43 @@ Local $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResults
 Local $bCleanup
 $iResult = GetSettings(@WorkingDir, $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResultsFile, $sMasterPlotFile, $sInputFolder, $sOutputFolder, $sRunFolder, $sIncompleteFolder, $bCleanup)
 If (Not $iResult) Or @error Then
-	ThrowError("Error loading global settings", 1, "plotLORASR", @error)
-	Exit 1
+    ThrowError("Error loading global settings", 1, "plotLORASR", @error)
+    Exit 1
 EndIf
 
 ; Check command line parameters
 LogMessage("Checking command line parameters...", 2, "plotLORASR")
 If $CmdLine[0] > 0 Then
-	$sPlotFile = $CmdLine[1] & ".xlsx"
+    $sPlotFile = $CmdLine[1] & ".xlsx"
 Else
-	$sPlotFile = $sMasterPlotFile
+    $sPlotFile = $sMasterPlotFile
 EndIf
 If @error Then
-	ThrowError("Error checking command line parameters", 1, "plotLORASR", @error)
-	Exit 2
+    ThrowError("Error checking command line parameters", 1, "plotLORASR", @error)
+    Exit 2
 EndIf
 
 ; Get working directory if run from program directory
 LogMessage("Checking current directory...", 2, "plotLORASR")
 If @WorkingDir = $sProgramPath Then
-	$sFolder = FileSelectFolder("Please select the working directory that holds the files to be plotted.", "")
-	If @error Then
-		ThrowError("Could not select working directory", 1, "plotLORASR", @error)
-		Exit 3
-	EndIf
-	FileChangeDir($sFolder)
-	If @error Then
-		ThrowError("Could not access working directory", 1, "plotLORASR", @error)
-		Exit 4
-	EndIf
+    $sFolder = FileSelectFolder("Please select the working directory that holds the files to be plotted.", "")
+    If @error Then
+        ThrowError("Could not select working directory", 1, "plotLORASR", @error)
+        Exit 3
+    EndIf
+    FileChangeDir($sFolder)
+    If @error Then
+        ThrowError("Could not access working directory", 1, "plotLORASR", @error)
+        Exit 4
+    EndIf
 EndIf
 
 ; Call the main run function
 LogMessage("Starting plots...", 1, "plotLORASR")
 $iResult = PlotLORASR(@WorkingDir, $sPlotFile, $sMasterPlotFile, $sProgramPath)
 If (Not $iResult) Or @error Then
-	ThrowError("Error during plot process.", 1, "plotLORASR", @error)
-	Exit 5
+    ThrowError("Error during plot process.", 1, "plotLORASR", @error)
+    Exit 5
 EndIf
 
 ; Exit program

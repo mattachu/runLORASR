@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.12
  Modified:       2017.08.30
- Version:        0.4.2.4
+ Version:        0.4.2.5
 
  Script Function:
 	Functions used by runLORASR
@@ -26,7 +26,7 @@ Global $g_sLogFile = "runLORASR.log"
 
 ; Create new log file on first open
 CreateLogFile($g_sLogFile, @WorkingDir)
-LogMessage("Loaded `runLORASR.Functions` version 0.4.2.4", 3)
+LogMessage("Loaded `runLORASR.Functions` version 0.4.2.5", 3)
 
 ; Function to read settings from runLORASR.ini file
 Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProgram, ByRef $sSweepFile, ByRef $sTemplateFile, ByRef $sResultsFile, ByRef $sPlotFile, ByRef $sInputFolder, ByRef $sOutputFolder, ByRef $sRunFolder, ByRef $sIncompleteFolder, ByRef $bCleanup)
@@ -296,7 +296,7 @@ Func LogMessage($sMessageText, $iImportance = 3, $sFunctionName = "", $sLogFile 
 	Local $asResult
 
 	; Errors get special handling
-	If StringInStr($sMessageText, "ERROR") Then
+	If StringInStr($sMessageText, "*** ERROR") Then
 
 		; Log message already created by the error handler
 		$sLogMessage = $sMessageText

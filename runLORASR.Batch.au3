@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.08
- Modified:       2017.08.30
- Version:        0.4.2.2
+ Modified:       2017.09.04
+ Version:        0.4.2.3
 
  Script Function:
     Work through a batch of input files and run LORASR for each one
@@ -23,7 +23,7 @@
 #include "runLORASR.Plots.au3"
 #include "runLORASR.Tidy.au3"
 
-LogMessage("Loaded `runLORASR.Batch` version 0.4.2.2", 3)
+LogMessage("Loaded `runLORASR.Batch` version 0.4.2.3", 3)
 
 ; Main function
 Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program Files (x86)\LORASR", $sSimulationProgram = "LORASR.exe", $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sPlotFile = "Plots.xlsx", $sInputFolder = "Input", $sOutputFolder = "Output", $sRunFolder = "Runs", $sIncompleteFolder = "Incomplete", $bCleanup = True)
@@ -118,12 +118,12 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
         ; Call the main run function
         $iResult = RunLORASR($sRun, $sWorkingDirectory, $sSimulationProgramPath, $sInputFolder)
-
-        ; Report result
-        LogMessage("Result for run *" & $sRun & ":* " & $iResult, 2, "BatchLORASR")
         $tEnd = _Date_Time_GetLocalTime()
         $sEnd = _Date_Time_SystemTimeToDateTimeStr($tEnd, 1)
         LogMessage("Current time: " & $sEnd, 4, "BatchLORASR")
+
+        ; Report result
+        LogMessage("Result for run *" & $sRun & ":* " & $iResult, 2, "BatchLORASR")
 
         ; Try once more if failed
         If Not ($iResult = 1) Then

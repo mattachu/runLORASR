@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.12
  Modified:       2017.09.05
- Version:        0.4.2.7
+ Version:        0.4.2.8
 
  Script Function:
     Functions used by runLORASR
@@ -22,7 +22,7 @@
 Global CONST $g_tProgramRunTime = _Date_Time_GetLocalTime()
 
 ; Code versions (modified by each loaded library or executable)
-Global CONST $g_sFunctionsVersion = "0.4.2.7"
+Global CONST $g_sFunctionsVersion = "0.4.2.8"
 Global $g_sRunVersion = ""
 Global $g_sPlotsVersion = ""
 Global $g_sBatchVersion = ""
@@ -112,7 +112,7 @@ Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProg
 
     $bCleanup = (StringCompare(IniRead($sSettingsFile, "Options", "Cleanup", "True"), "True") = 0)
     $g_iConsoleVerbosity = Number(IniRead($sSettingsFile, "Options", "ConsoleVerbosity", "5"))
-    $g_iLogFileVerbosity = Number(IniRead($sSettingsFile, "Options", "LogFileVerbosity", "4"))
+    $g_iLogFileVerbosity = Number(IniRead($sSettingsFile, "Options", "LogFileVerbosity", "3"))
     $g_iMessageVerbosity = Number(IniRead($sSettingsFile, "Options", "MessageVerbosity", "1"))
 
     ; Log results

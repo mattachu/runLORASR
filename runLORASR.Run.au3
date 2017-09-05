@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.04
  Modified:       2017.09.05
- Version:        0.4.2.6
+ Version:        0.4.2.7
 
  Script Function:
     Run LORASR for a given filename
@@ -16,7 +16,7 @@
 #include "runLORASR.Functions.au3"
 
 ; Code version
-$g_sPlotsVersion = "0.4.2.6"
+$g_sPlotsVersion = "0.4.2.7"
 
 ; Global declarations
 Global $g_sMainWindowTitle = "LORASR PC Version"
@@ -124,7 +124,7 @@ Func RunLORASR($sRun = "", $sWorkingDirectory = @WorkingDir, $sSimulationProgram
     EndIf
 
     ; Quit the program
-    LogMessage("Simulation complete: exiting RunLORASR", 2, "RunLORASR")
+    LogMessage("Simulation complete: exiting `RunLORASR`", 2, "RunLORASR")
     Return 1
 
 EndFunc   ;==>RunLORASR

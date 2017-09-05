@@ -106,7 +106,7 @@ Func CreateResultsFile($asParameters, $sWorkingDirectory = @WorkingDir, $sResult
     ; Backup existing results file
     If FileExists($sWorkingDirectory & "\" & $sResultsFile) Then
         FileMove($sWorkingDirectory & "\" & $sResultsFile, $sWorkingDirectory & "\" & $sResultsFile & ".old", $FC_OVERWRITE)
-        LogMessage("Backed up old results file to `" & $sResultsFile & ".old`", 4, "CreateResultsFile")
+        LogMessage("Backed up old results file to `" & $sWorkingDirectory & "\" & $sResultsFile & ".old`", 4, "CreateResultsFile")
     EndIf
 
     ; Create new results file
@@ -117,7 +117,7 @@ Func CreateResultsFile($asParameters, $sWorkingDirectory = @WorkingDir, $sResult
         SetError(1)
         Return 0
     EndIf
-    LogMessage("Created new results file `" & $sResultsFile & "`", 3, "CreateResultsFile")
+    LogMessage("Created new results file `" & $sWorkingDirectory & "\" & $sResultsFile & "`", 3, "CreateResultsFile")
 
     ; Basic headers
     $sHeader = "Run date, Run time, Transmission (%), Core particles (%)"
@@ -292,16 +292,16 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
     ; Open results file
     $hResultsFile = FileOpen($sWorkingDirectory & "\" & $sResultsFile, $FO_APPEND)
     If (Not $hResultsFile) Or @error Then
-        ThrowError("Error opening batch results file `" & $sResultsFile & "`", 2, "SaveRunResults", @error)
+        ThrowError("Error opening batch results file `" & $sWorkingDirectory & "\" & $sResultsFile & "`", 2, "SaveRunResults", @error)
         SetError(11)
         Return 0
     EndIf
 
     ; Write out data to CSV
-    LogMessage("Writing results to file `" & $sResultsFile & "`", 3, "SaveRunResults")
+    LogMessage("Writing results to file `" & $sWorkingDirectory & "\" & $sResultsFile & "`", 3, "SaveRunResults")
     $iResult = FileWrite($hResultsFile, $sRunDate & ", " & $sRunTime & ", " & $sTransmission & ", " & $sCoreParticles)
     If (Not $iResult) Or @error Then
-        ThrowError("Error writing to batch results file `" & $sResultsFile & "`", 2, "SaveRunResults", @error)
+        ThrowError("Error writing to batch results file `" & $sWorkingDirectory & "\" & $sResultsFile & "`", 2, "SaveRunResults", @error)
         FileWrite($hResultsFile, @CRLF)
         FileClose($hResultsFile)
         SetError(12)
@@ -313,7 +313,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
     While $iCurrentDetail < $iRunDetails - 1
         $iResult = FileWrite($hResultsFile, ", " & $asRunDetails[$iCurrentDetail])
         If (Not $iResult) Or @error Then
-            ThrowError("Error writing to batch results file `" & $sResultsFile & "`", 2, "SaveRunResults", @error)
+            ThrowError("Error writing to batch results file `" & $sWorkingDirectory & "\" & $sResultsFile & "`", 2, "SaveRunResults", @error)
             FileWrite($hResultsFile, @CRLF)
             FileClose($hResultsFile)
             SetError(13)
@@ -325,7 +325,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
     ; Next line for next run
     $iResult = FileWrite($hResultsFile, @CRLF)
     If (Not $iResult) Or @error Then
-        ThrowError("Error writing to batch results file `" & $sResultsFile & "`", 2, "SaveRunResults", @error)
+        ThrowError("Error writing to batch results file `" & $sWorkingDirectory & "\" & $sResultsFile & "`", 2, "SaveRunResults", @error)
         FileClose($hResultsFile)
         SetError(14)
         Return 0
@@ -334,7 +334,7 @@ Func SaveRunResults($sRun, $sWorkingDirectory = @WorkingDir, $sResultsFile = "Ba
     ; Close results file
     $iResult = FileClose($hResultsFile)
     If (Not $iResult) Or @error Then
-        ThrowError("Error closing batch results file `" & $sResultsFile & "`", 2, "SaveRunResults", @error)
+        ThrowError("Error closing batch results file `" & $sWorkingDirectory & "\" & $sResultsFile & "`", 2, "SaveRunResults", @error)
         SetError(15)
         Return 0
     EndIf

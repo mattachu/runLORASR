@@ -51,7 +51,7 @@ If @WorkingDir = $sProgramPath Then
         Exit 4
     EndIf
 EndIf
-LogMessage("Running batch in folder `" & @WorkingDir & "`", 3,  "batchLORASR")
+LogMessage("Running batch in working folder `" & @WorkingDir & "`", 3,  "batchLORASR")
 
 ; Call the main run function
 LogMessage("Calling main batch function.", 2, "batchLORASR")

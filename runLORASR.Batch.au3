@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.08
- Modified:       2017.09.04
- Version:        0.4.2.3
+ Modified:       2017.09.05
+ Version:        0.4.2.4
 
  Script Function:
     Work through a batch of input files and run LORASR for each one
@@ -23,7 +23,8 @@
 #include "runLORASR.Plots.au3"
 #include "runLORASR.Tidy.au3"
 
-LogMessage("Loaded `runLORASR.Batch` version 0.4.2.3", 3)
+; Code version
+$g_sBatchVersion = "0.4.2.4"
 
 ; Main function
 Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program Files (x86)\LORASR", $sSimulationProgram = "LORASR.exe", $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sPlotFile = "Plots.xlsx", $sInputFolder = "Input", $sOutputFolder = "Output", $sRunFolder = "Runs", $sIncompleteFolder = "Incomplete", $bCleanup = True)

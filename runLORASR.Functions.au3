@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.12
- Modified:       2017.09.04
- Version:        0.4.2.6
+ Modified:       2017.09.05
+ Version:        0.4.2.7
 
  Script Function:
     Functions used by runLORASR
@@ -18,23 +18,68 @@
 #include <FileConstants.au3>
 #include <MsgBoxConstants.au3>
 
-; Global declarations
-Global $g_iConsoleVerbosity = 5
-Global $g_iLogFileVerbosity = 4
-Global $g_iMessageVerbosity = 1
-Global $g_sLogFile = "runLORASR.log"
+; Program start time (used to build file names)
+Global CONST $g_tProgramRunTime = _Date_Time_GetLocalTime()
 
-; Create new log file on first open
-CreateLogFile($g_sLogFile, @WorkingDir)
-LogMessage("Loaded `runLORASR.Functions` version 0.4.2.6", 3)
+; Code versions (modified by each loaded library or executable)
+Global CONST $g_sFunctionsVersion = "0.4.2.7"
+Global $g_sRunVersion = ""
+Global $g_sPlotsVersion = ""
+Global $g_sBatchVersion = ""
+Global $g_sSweepVersion = ""
+Global $g_sResultsVersion = ""
+Global $g_sTidyVersion = ""
+
+; Logging verbosity defaults (changed by GetSettings)
+Global $g_iConsoleVerbosity = 5
+Global $g_iLogFileVerbosity = 3
+Global $g_iMessageVerbosity = 1
+
+; File and path defaults (used by GetSettings and the logging system)
+Global CONST $g_sSettingsFile = "runLORASR.ini"
+Global CONST $g_asSettingsSearchPath = ["C:\Program Files (x86)\LORASR", "C:\Program Files\LORASR", "C:\LORASR"]
+Global $g_sLogFile = DateTimeFileName("runLORASR", "log.md")
+
+; Function to build filename for the log file
+Func DateTimeFileName($sFilePrefix, $sFileExtension, $tDateTime = $g_tProgramRunTime)
+	; No logging, as this is part of the logging system
+
+    ; Declarations
+    Local $sFileName = ""
+
+    ; Build filename
+    $sFileName = $sFilePrefix & "-" & StringReplace(StringReplace(StringReplace(_Date_Time_SystemTimeToDateTimeStr($tDateTime,1), "/", ""), ":", ""), " ", "-") & $sFileExtension
+
+    ; Return result
+    Return $sFileName
+
+EndFunc
+
+; Function to report code versions
+Func LogVersions($sExecutable = "", $sExecutableVersion = "")
+	; No logging as this is part of the logging function
+
+    ; Log library versions
+    LogMessage("Loaded `runLORASR.Functions` version " & $g_sFunctionsVersion, 3)
+    If $g_sRunVersion Then LogMessage("Loaded `runLORASR.Run` version " & $g_sRunVersion, 3)
+    If $g_sPlotsVersion Then LogMessage("Loaded `runLORASR.Plots` version " & $g_sPlotsVersion, 3)
+    If $g_sBatchVersion Then LogMessage("Loaded `runLORASR.Batch` version " & $g_sBatchVersion, 3)
+    If $g_sSweepVersion Then LogMessage("Loaded `runLORASR.Sweep` version " & $g_sSweepVersion, 3)
+    If $g_sResultsVersion Then LogMessage("Loaded `runLORASR.Results` version " & $g_sResultsVersion, 3)
+    If $g_sTidyVersion Then LogMessage("Loaded `runLORASR.Tidy` version " & $g_sTidyVersion, 3)
+
+    ; Log executable version
+    If $sExecutable And $sExecutableVersion Then LogMessage("Starting `" & $sExecutable & "` version " & $sExecutableVersion & "", 3)
+
+EndFunc
 
 ; Function to read settings from runLORASR.ini file
 Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProgram, ByRef $sSweepFile, ByRef $sTemplateFile, ByRef $sResultsFile, ByRef $sPlotFile, ByRef $sInputFolder, ByRef $sOutputFolder, ByRef $sRunFolder, ByRef $sIncompleteFolder, ByRef $bCleanup)
-    LogMessage("Called `GetSettings($sWorkingDirectory = " & $sWorkingDirectory & ", ... )`", 5)
+	LogMessage("Called `GetSettings($sWorkingDirectory = " & $sWorkingDirectory & ", ... )`", 5)
 
     ; Declarations
-    Local $sSettingsFile = "runLORASR.ini"
-    Local $asSettingsSearchPath = ["C:\Program Files (x86)\LORASR", "C:\Program Files\LORASR", "C:\LORASR"]
+    Local $sSettingsFile = $g_sSettingsFile
+    Local $asSettingsSearchPath = $g_asSettingsSearchPath
     Local $sFoundFile = ""
 
     ; Find INI file
@@ -48,42 +93,42 @@ Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProg
         $sSettingsFile = $sFoundFile
     Else
         ; File not found
-        ThrowError("Could not find settings file " & $sSettingsFile & ". Switching to default values.", 3, "GetSettings", @error)
+        ThrowError("Could not find settings file `" & $sSettingsFile & "`. Switching to default values.", 3, "GetSettings", @error)
         SetError(1)
     EndIf
 
     ; Load settings from INI file
     ; On error the variables are set to the given default values
     $sProgramPath = IniRead($sSettingsFile, "Files and folders", "ProgramPath", "C:\Program Files (x86)\LORASR")
-    LogMessage("ProgramPath: `" & $sProgramPath & "`", 4, "GetSettings")
     $sSimulationProgram = IniRead($sSettingsFile, "Files and folders", "SimulationProgram", "LORASR.exe")
-    LogMessage("SimulationProgram: `" & $sSimulationProgram & "`", 4, "GetSettings")
     $sSweepFile = IniRead($sSettingsFile, "Files and folders", "SweepFile", "Sweep.xlsx")
-    LogMessage("SweepFile: `" & $sSweepFile & "`", 4, "GetSettings")
     $sTemplateFile = IniRead($sSettingsFile, "Files and folders", "TemplateFile", "Template.txt")
-    LogMessage("TemplateFile: `" & $sTemplateFile & "`", 4, "GetSettings")
     $sResultsFile = IniRead($sSettingsFile, "Files and folders", "ResultsFile", "Batch results.csv")
-    LogMessage("ResultsFile: `" & $sResultsFile & "`", 4, "GetSettings")
     $sPlotFile = IniRead($sSettingsFile, "Files and folders", "PlotFile", "Plots.xlsx")
-    LogMessage("PlotFile: `" & $sPlotFile & "`", 4, "GetSettings")
-    $g_sLogFile = IniRead($sSettingsFile, "Files and folders", "LogFile", "runLORASR.log")
-    LogMessage("LogFile: `" & $g_sLogFile & "`", 4, "GetSettings")
     $sInputFolder = IniRead($sSettingsFile, "Files and folders", "InputFolder", "Input")
-    LogMessage("InputFolder: `" & $sInputFolder & "`", 4, "GetSettings")
     $sOutputFolder = IniRead($sSettingsFile, "Files and folders", "OutputFolder", "Output")
-    LogMessage("OutputFolder: `" & $sOutputFolder & "`", 4, "GetSettings")
     $sRunFolder = IniRead($sSettingsFile, "Files and folders", "RunFolder", "Runs")
-    LogMessage("RunFolder: `" & $sRunFolder & "`", 4, "GetSettings")
     $sIncompleteFolder = IniRead($sSettingsFile, "Files and folders", "IncompleteFolder", "Incomplete")
-    LogMessage("IncompleteFolder: `" & $sIncompleteFolder & "`", 4, "GetSettings")
 
     $bCleanup = (StringCompare(IniRead($sSettingsFile, "Options", "Cleanup", "True"), "True") = 0)
-    LogMessage("Cleanup: `" & $bCleanup & "`", 4, "GetSettings")
     $g_iConsoleVerbosity = Number(IniRead($sSettingsFile, "Options", "ConsoleVerbosity", "5"))
-    LogMessage("ConsoleVerbosity: " & $g_iConsoleVerbosity, 4, "GetSettings")
     $g_iLogFileVerbosity = Number(IniRead($sSettingsFile, "Options", "LogFileVerbosity", "4"))
-    LogMessage("LogFileVerbosity: " & $g_iLogFileVerbosity, 4, "GetSettings")
     $g_iMessageVerbosity = Number(IniRead($sSettingsFile, "Options", "MessageVerbosity", "1"))
+
+    ; Log results
+    LogMessage("ProgramPath: `" & $sProgramPath & "`", 4, "GetSettings")
+    LogMessage("SimulationProgram: `" & $sSimulationProgram & "`", 4, "GetSettings")
+    LogMessage("SweepFile: `" & $sSweepFile & "`", 4, "GetSettings")
+    LogMessage("TemplateFile: `" & $sTemplateFile & "`", 4, "GetSettings")
+    LogMessage("ResultsFile: `" & $sResultsFile & "`", 4, "GetSettings")
+    LogMessage("PlotFile: `" & $sPlotFile & "`", 4, "GetSettings")
+    LogMessage("InputFolder: `" & $sInputFolder & "`", 4, "GetSettings")
+    LogMessage("OutputFolder: `" & $sOutputFolder & "`", 4, "GetSettings")
+    LogMessage("RunFolder: `" & $sRunFolder & "`", 4, "GetSettings")
+    LogMessage("IncompleteFolder: `" & $sIncompleteFolder & "`", 4, "GetSettings")
+    LogMessage("Cleanup: `" & $bCleanup & "`", 4, "GetSettings")
+    LogMessage("ConsoleVerbosity: " & $g_iConsoleVerbosity, 4, "GetSettings")
+    LogMessage("LogFileVerbosity: " & $g_iLogFileVerbosity, 4, "GetSettings")
     LogMessage("MessageVerbosity: " & $g_iMessageVerbosity, 4, "GetSettings")
 
     ; Exit function
@@ -94,7 +139,7 @@ EndFunc
 
 ; Function to find required files
 Func FindFile($sFindFileName, $sWorkingDir = @WorkingDir, $sMasterDir = $sWorkingDir & "\Input", $bCopy = True)
-    LogMessage("Called `FindFile($sFindFileName = " & $sFindFileName & ", $sWorkingDir = " & $sWorkingDir & ", $sMasterDir = " & $sMasterDir & ", $bCopy = " & $bCopy & ")`", 5)
+	LogMessage("Called `FindFile($sFindFileName = " & $sFindFileName & ", $sWorkingDir = " & $sWorkingDir & ", $sMasterDir = " & $sMasterDir & ", $bCopy = " & $bCopy & ")`", 5)
 
     ; Declarations
     Local $sFoundFile = ""
@@ -153,7 +198,7 @@ EndFunc
 
 ; Function to copy a file or set of files
 Func CopyFiles($sCopyFileName, $sCopySourceFolder, $sCopyDestinationFolder, $bOverwrite = False)
-    LogMessage("Called `CopyFiles($sCopyFileName = " & $sCopyFileName & ", $sCopySourceFolder = " & $sCopySourceFolder & ", $sCopyDestinationFolder = " & $sCopyDestinationFolder & ", $bOverwrite = " & $bOverwrite & ")`", 5)
+	LogMessage("Called `CopyFiles($sCopyFileName = " & $sCopyFileName & ", $sCopySourceFolder = " & $sCopySourceFolder & ", $sCopyDestinationFolder = " & $sCopyDestinationFolder & ", $bOverwrite = " & $bOverwrite & ")`", 5)
 
     Local $asCopyFiles
     Local $iCurrentFile
@@ -202,7 +247,7 @@ EndFunc
 
 ; Function to copy a file or set of files
 Func MoveFiles($sMoveFileName, $sMoveSourceFolder, $sMoveDestinationFolder, $bOverwrite = False)
-    LogMessage("Called `MoveFiles($sMoveFileName = " & $sMoveFileName & ", $sMoveSourceFolder = " & $sMoveSourceFolder & ", $sMoveDestinationFolder = " & $sMoveDestinationFolder & ", $bOverwrite = " & $bOverwrite & ")`", 5)
+	LogMessage("Called `MoveFiles($sMoveFileName = " & $sMoveFileName & ", $sMoveSourceFolder = " & $sMoveSourceFolder & ", $sMoveDestinationFolder = " & $sMoveDestinationFolder & ", $bOverwrite = " & $bOverwrite & ")`", 5)
 
     Local $asMoveFiles
     Local $iCurrentFile
@@ -251,7 +296,7 @@ EndFunc
 
 ; Function to delete a file or set of files
 Func DeleteFiles($sDeleteFileName, $sSearchFolder = @WorkingDir)
-    LogMessage("Called `DeleteFiles($sDeleteFileName = " & $sDeleteFileName & ", $sSearchFolder = " & $sSearchFolder & ")`", 5)
+	LogMessage("Called `DeleteFiles($sDeleteFileName = " & $sDeleteFileName & ", $sSearchFolder = " & $sSearchFolder & ")`", 5)
 
     Local $asDeleteFiles
     Local $iCurrentFile
@@ -382,7 +427,7 @@ EndFunc
 
 ; Function to write to the log file
 Func WriteToLogFile($sMessageText, $sLogFile = $g_sLogFile, $sWorkingDirectory = @WorkingDir)
-    ; Note there is no logging in this function, as that could create a recursive loop.
+	; Note there is no logging in this function, as that could create a recursive loop.
 
     ; Declarations
     Local $hLogFile = 0
@@ -403,7 +448,7 @@ EndFunc
 
 ; Function to create a new log file
 Func CreateLogFile($sLogFile = $g_sLogFile, $sWorkingDirectory = @WorkingDir)
-    ; Note there is no logging in this function, as that could create a recursive loop.
+	; Note there is no logging in this function, as that could create a recursive loop.
 
     ; Declarations
     Local $hLogFile = 0
@@ -439,7 +484,7 @@ EndFunc
 
 ; Function to handle errors
 Func ThrowError($sErrorText = "", $iImportance = 3, $sFunctionName = "", $iErrorCode = 0, $sLogFile = $g_sLogFile, $sWorkingDirectory = @WorkingDir)
-    ; Note there is no logging in this function, as that could create a recursive loop.
+	; Note there is no logging in this function, as that could create a recursive loop.
 
     ; Declarations
     Local $sErrorMessage = ""
@@ -469,7 +514,7 @@ EndFunc
 
 ; Function to make a heading from a message
 Func Heading($sText)
-    ; No logging as this is part of the logging process
+	; No logging as this is part of the logging process
 
     ; Trim any trailing dots
     While StringRight($sText, 1) = "."
@@ -494,7 +539,7 @@ EndFunc
 
 ; Function to check whether particular text is directly mentioning/setting the working directory
 Func ExplicitWorkingDirectory($sText)
-    ; No logging as this is part of the logging process
+	; No logging as this is part of the logging process
 
     Return (StringInStr($sText, "working") And (StringInStr($sText, "folder") Or StringInStr($sText, "directory")))
 
@@ -502,7 +547,7 @@ EndFunc
 
 ; Function to replace the full path to the working directory with a shortened version
 Func StripWorkingDirectory($sText, $sWorkingDirectory = @WorkingDir)
-    ; No logging as this is part of the logging process
+	; No logging as this is part of the logging process
 
     Return StringReplace($sText, $sWorkingDirectory, ".")
 

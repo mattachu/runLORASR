@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.13
- Modified:       2017.08.30
- Version:        0.4.2.1
+ Modified:       2017.09.05
+ Version:        0.4.2.2
 
  Script Function:
     Copy data from LORASR output files to Excel plotting spreadsheet
@@ -17,7 +17,8 @@
 #include <Excel.au3>
 #include <Date.au3>
 
-LogMessage("Loaded `runLORASR.Plots` version 0.4.2.1", 3)
+; Code version
+$g_sPlotsVersion = "0.4.2.2"
 
 ; Function that defines input and output settings for each data type: changes to the LORASR code may require changes here.
 Func GetFileSettings($sDataType, ByRef $sDataFile1, ByRef $iDataStart1, ByRef $iDataEnd1, ByRef $sDataFile2, ByRef $iDataStart2, ByRef $iDataEnd2, ByRef $iWorksheet, ByRef $sDataLocation1, ByRef $sDataLocation2)
@@ -371,8 +372,7 @@ Func CreatePlotSpreadsheet($sWorkingDirectory = @WorkingDir, $sPlotFile = "Plots
 
     ; If there is no special name for the plot file, use the date and time
     If $sPlotFile = $sMasterPlotFile Then
-        $tCurrentTime = _Date_Time_GetLocalTime()
-        $sPlotFile = StringTrimRight($sPlotFile, 5) & "-" & StringReplace(StringReplace(StringReplace(_Date_Time_SystemTimeToDateTimeStr($tCurrentTime,1), "/", ""), ":", ""), " ", "-") & ".xlsx"
+        $sPlotFile = DateTimeFileName(StringTrimRight($sPlotFile, 5), ".xlsx", _Date_Time_GetLocalTime())
         LogMessage("Creating unique plot file name: `" & $sPlotFile & "`", 5, "CreatePlotSpreadsheet")
     EndIf
 

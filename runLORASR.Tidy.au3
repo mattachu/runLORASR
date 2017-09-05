@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.13
  Modified:       2017.09.05
- Version:        0.4.2.2
+ Version:        0.4.2.3
 
  Script Function:
     Tidy up files from a batch run of LORASR
@@ -16,7 +16,7 @@
 #include "runLORASR.Functions.au3"
 
 ; Code version
-$g_sTidyVersion = "0.4.2.2"
+$g_sTidyVersion = "0.4.2.3"
 
 ; Tidy up files from an incomplete run
 Func TidyIncompleteRun($sRun, $sWorkingDirectory = @WorkingDir, $sIncompleteFolder = "Incomplete")
@@ -191,6 +191,7 @@ Func TidyBatchFiles($sWorkingDirectory = @WorkingDir, $sSimulationProgram = "LOR
     ; Delete any old file versions
     LogMessage("Clearing up any old uneeded files", 3, "TidyBatchFiles")
     If FileExists($sWorkingDirectory & "\*.old") Then DeleteFiles("*.old", $sWorkingDirectory)
+    If FileExists($sWorkingDirectory & "\*.log") Or FileExists($sWorkingDirectory & "\*.log.md") Then TidyLogFiles($sWorkingDirectory, $sRunFolder)
 
     ; Exit
     Return (Not @error)
@@ -216,6 +217,26 @@ Func TidySimulationFiles($sWorkingDirectory = @WorkingDir)
     If FileExists($sWorkingDirectory & "\zclu*") Then DeleteFiles("zclu*", $sWorkingDirectory)
 
     ; Exit
+    Return (Not @error)
+
+EndFunc
+
+Func TidyLogFiles($sWorkingDirectory = @WorkingDir, $sRunFolder = "Runs")
+    LogMessage("Called `TidyLogFiles($sWorkingDirectory = " & $sWorkingDirectory & ")`", 5)
+
+    ; Declarations
+    Local $asLogFiles
+    Local $iCurrentFile
+
+    ; Get list of log files
+    $asLogFiles = _FileListToArray(@WorkingDir, "*.log*")
+
+    ; Loop through log files
+    For $iCurrentFile = 1 To UBound($asLogFiles) - 1
+        ; All files except the current log file get moved to the run folder
+        If StringCompare($asLogFiles[$iCurrentFile], $g_sLogFile) Then MoveFiles($asLogFiles[$iCurrentFile], $sWorkingDirectory, $sWorkingDirectory & "\" & $sRunFolder, True)
+    Next
+
     Return (Not @error)
 
 EndFunc

@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.13
  Modified:       2017.09.05
- Version:        0.4.2.3
+ Version:        0.4.3.1
 
  Script Function:
     Tidy up files from a batch run of LORASR
@@ -16,7 +16,7 @@
 #include "runLORASR.Functions.au3"
 
 ; Code version
-$g_sTidyVersion = "0.4.2.3"
+$g_sTidyVersion = "0.4.3.1"
 
 ; Tidy up files from an incomplete run
 Func TidyIncompleteRun($sRun, $sWorkingDirectory = @WorkingDir, $sIncompleteFolder = "Incomplete")

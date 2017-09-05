@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.08.07
  Modified:       2017.09.05
- Version:        0.4.2.2
+ Version:        0.4.3.1
 
  Script Function:
     Create a batch of input files from a batch definition file and a template
@@ -21,7 +21,7 @@
 #include <FileConstants.au3>
 
 ; Code version
-$g_sSweepVersion = "0.4.2.2"
+$g_sSweepVersion = "0.4.3.1"
 
 ; Main function
 Func SweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sInputFolder = "Input")

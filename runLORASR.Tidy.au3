@@ -189,7 +189,7 @@ Func TidyBatchFiles($sWorkingDirectory = @WorkingDir, $sSimulationProgram = "LOR
     If FileExists($sWorkingDirectory & "\" & $sSimulationProgram) Then DeleteFiles($sSimulationProgram, $sWorkingDirectory)
 
     ; Delete any old file versions
-    LogMessage("Clearing up any old uneeded files", 3, "TidyBatchFiles")
+    LogMessage("Clearing up any old unneeded files", 3, "TidyBatchFiles")
     If FileExists($sWorkingDirectory & "\*.old") Then DeleteFiles("*.old", $sWorkingDirectory)
     If FileExists($sWorkingDirectory & "\*.log") Or FileExists($sWorkingDirectory & "\*.log.md") Then TidyLogFiles($sWorkingDirectory, $sRunFolder)
 

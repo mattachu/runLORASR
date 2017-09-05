@@ -45,7 +45,6 @@ Func GetSettings($sWorkingDirectory, ByRef $sProgramPath, ByRef $sSimulationProg
     Next ; $sSearchFolder
     If $sFoundFile Then
         ; Found settings file
-        LogMessage("Using settings file at `" & $sFoundFile & "`", 4, "GetSettings")
         $sSettingsFile = $sFoundFile
     Else
         ; File not found

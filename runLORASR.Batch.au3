@@ -142,6 +142,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
         ; Try once more if failed
         If Not ($iResult = 1) Then
             LogMessage("Starting run *" & $sRun & "* again...", 2, "BatchLORASR")
+            UpdateProgress("current", 20, "Running LORASR simulation")
             $iResult = RunLORASR($sRun, $sWorkingDirectory, $sSimulationProgramPath, $sInputFolder)
             LogMessage("Result for re-run *" & $sRun & ":* " & $iResult, 2, "BatchLORASR")
             $tEnd = _Date_Time_GetLocalTime()
@@ -158,6 +159,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
         ; Save run results to output file
         LogMessage("Saving summary results for run *" & $sRun & "* to batch results output file...", 2, "BatchLORASR")
+        UpdateProgress("current", 60, "Saving summary results")
         $iResult = SaveRunResults($sRun, $sWorkingDirectory, $sResultsFile)
         If (Not $iResult) Or @error Then
             ; Log failure and continue
@@ -169,6 +171,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
         ; Create plots spreadsheet
         LogMessage("Plotting results of run *" & $sRun & "* to spreadsheet...", 2, "BatchLORASR")
+        UpdateProgress("current", 80, "Plotting results to spreadsheet")
         $iResult = PlotLORASR($sWorkingDirectory, $sRun & ".xlsx", $sPlotFile, $sProgramPath)
         If (Not $iResult) Or @error Then
             ; Log failure and continue
@@ -181,6 +184,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
         ; Tidy up
         If $bCleanup Then
             LogMessage("Tidying up files for run *" & $sRun & "*...", 2, "BatchLORASR")
+            UpdateProgress("current", 90, "Tidying up files")
             $iResult = TidyCompletedRun($sRun, $sWorkingDirectory, $sInputFolder, $sOutputFolder, $sRunFolder)
             If (Not $iResult) Or @error Then
                 ; Log failure and continue
@@ -194,6 +198,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
         ; Report completion
         LogMessage("Run *" & $sRun & "* complete.", 2, "BatchLORASR")
+        UpdateProgress("current", 100, "Run complete.")
         $tEnd = _Date_Time_GetLocalTime()
         $sEnd = _Date_Time_SystemTimeToDateTimeStr($tEnd, 1)
         LogMessage("End time: " & $sEnd, 4, "BatchLORASR")

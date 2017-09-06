@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.12
  Modified:       2017.09.05
- Version:        0.4.3.1
+ Version:        0.4.3.2
 
  Script Function:
     Functions used by runLORASR
@@ -22,13 +22,14 @@
 Global CONST $g_tProgramRunTime = _Date_Time_GetLocalTime()
 
 ; Code versions (modified by each loaded library or executable)
-Global CONST $g_sFunctionsVersion = "0.4.3.1"
+Global CONST $g_sFunctionsVersion = "0.4.3.2"
 Global $g_sRunVersion = ""
 Global $g_sPlotsVersion = ""
 Global $g_sBatchVersion = ""
 Global $g_sSweepVersion = ""
 Global $g_sResultsVersion = ""
 Global $g_sTidyVersion = ""
+Global $g_sProgressVersion = ""
 
 ; Logging verbosity defaults (changed by GetSettings)
 Global $g_iConsoleVerbosity = 5
@@ -67,6 +68,7 @@ Func LogVersions($sExecutable = "", $sExecutableVersion = "")
     If $g_sSweepVersion Then LogMessage("Loaded `runLORASR.Sweep` version " & $g_sSweepVersion, 3)
     If $g_sResultsVersion Then LogMessage("Loaded `runLORASR.Results` version " & $g_sResultsVersion, 3)
     If $g_sTidyVersion Then LogMessage("Loaded `runLORASR.Tidy` version " & $g_sTidyVersion, 3)
+    If $g_sProgressVersion Then LogMessage("Loaded `runLORASR.Progress` version " & $g_sProgressVersion, 3)
 
     ; Log executable version
     If $sExecutable And $sExecutableVersion Then LogMessage("Starting `" & $sExecutable & "` version " & $sExecutableVersion & "", 3)

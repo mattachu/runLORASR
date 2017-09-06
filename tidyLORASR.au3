@@ -1,7 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Res_Comment=Created by M J Easton
 #AutoIt3Wrapper_Res_Description=Tidy up files from a batch run of LORASR
-#AutoIt3Wrapper_Res_Fileversion=0.4.3.2
+#AutoIt3Wrapper_Res_Fileversion=0.4.3.3
 #AutoIt3Wrapper_Res_LegalCopyright=Creative Commons Attribution ShareAlike
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs ----------------------------------------------------------------------------
@@ -11,7 +11,7 @@
  Author:         Matt Easton
  Created:        2017.07.13
  Modified:       2017.09.06
- Version:        0.4.3.2
+ Version:        0.4.3.3
 
  Script Function:
     Tidy up files from a batch run of LORASR
@@ -25,7 +25,7 @@
 
 ; Program version
 Global CONST $g_sProgramName = "tidyLORASR"
-Global CONST $g_sProgramVersion = "0.4.3.2"
+Global CONST $g_sProgramVersion = "0.4.3.3"
 
 ; Declarations
 Local $sRun = ""
@@ -81,11 +81,11 @@ If Not TidyBatchFiles(@WorkingDir, $sSimulationProgram, $sSweepFile, $sTemplateF
 
 ; Report completion
 If @error or $bError Then
-    LogMessage("Finished tidying with some errors.", 1, "tidyLORASR")
     UpdateProgress($g_sProgressType, 100, "Finished tidying with some errors")
+    LogMessage("Finished tidying with some errors.", 1, "tidyLORASR")
 Else
-    LogMessage("Finished tidying.", 1, "tidyLORASR")
     UpdateProgress($g_sProgressType, 100, "Finished tidying")
+    LogMessage("Finished tidying.", 1, "tidyLORASR")
 EndIf
 
 ; End program

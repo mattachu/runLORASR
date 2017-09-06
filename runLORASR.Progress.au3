@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.09.06
  Modified:       2017.09.06
- Version:        0.4.3.4
+ Version:        0.4.3.5
 
  Script Function:
     Show progress meters for the runLORASR batch process
@@ -21,7 +21,7 @@
 #include "runLORASR.Functions.au3"
 
 ; Code version
-$g_sProgressVersion = "0.4.3.4"
+$g_sProgressVersion = "0.4.3.5"
 
 ; Handles of controls are global to allow updating at different stages of different processes
 Global $g_hProgressWindow = 0, $g_hOverallProgressBar = 0, $g_hOverallProgressDetailLabel = 0, $g_hCurrentProgressBar = 0, $g_hCurrentProgressDetailLabel = 0
@@ -155,12 +155,12 @@ Func UpdateProgress($sProgressType, $iProgressPercentage, $sLabel = "")
             $hProgressLabel = $g_hCurrentProgressDetailLabel
     EndSwitch
     If (Not $hProgressBar) Or @error Then
-        ThrowError("Error selecting progress bar to update.", 5, "UpdateProgress", @error)
+        ThrowError("Error selecting progress bar to update.", 4, "UpdateProgress", @error)
         Return 0
     EndIf
 
     ; Set progress
-    LogMessage("Advancing " & $sProgressType & " progress bar to " & $iProgressPercentage & "%", 4, "UpdateProgress")
+    LogMessage("Advancing " & $sProgressType & " progress bar to " & $iProgressPercentage & "%", 5, "UpdateProgress")
     GUICtrlSetData($hProgressBar, $iProgressPercentage)
     If @error Then
         ThrowError("Error updating progress bar.", 4, "UpdateProgress", @error)

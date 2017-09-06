@@ -52,7 +52,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
     ; Copy input files to working directory
     LogMessage("Finding input files...", 2, "BatchLORASR")
-    UpdateProgress("current", 20, "Finding input files...")
+    UpdateProgress("current", 20, "Finding input files")
     $iResult = FindInputFiles($sWorkingDirectory, $sInputFolder, $sSweepFile, $sTemplateFile, $sPlotFile, $sProgramPath)
     If (Not $iResult) Or @error Then
         ; Errors at this stage may not stop the batch from running, but should be noted.
@@ -63,7 +63,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
     ; Try to set up parameter sweep
     LogMessage("Loading parameter sweep definition...", 2, "BatchLORASR")
-    UpdateProgress("current", 40, "Loading parameter sweep definition...")
+    UpdateProgress("current", 40, "Loading parameter sweep definition")
     If RunSweepLORASR($sWorkingDirectory, $sSweepFile, $sTemplateFile, $sResultsFile, $sInputFolder) Then
         ; If parameter sweep preparations were successful, the results file should already be created, so don't create it again.
         $bCreateResultsFile = False
@@ -82,7 +82,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
     ; Create results file unless already created by sweep program
     If $bCreateResultsFile Then
         LogMessage("Creating batch results output file...", 2, "BatchLORASR")
-        UpdateProgress("current", 60, "Creating batch results output file...")
+        UpdateProgress("current", 60, "Creating batch results output file")
         $iResult = CreateResultsFile(0, $sWorkingDirectory, $sResultsFile)
         If (Not $iResult) Or @error Then
             ; Write failed
@@ -96,7 +96,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
     ; Set up for first run
     LogMessage("Setting up simulation environment...", 2, "BatchLORASR")
-    UpdateProgress("current", 80, "Setting up simulation environment...")
+    UpdateProgress("current", 80, "Setting up simulation environment")
     $sSimulationProgramPath = SetupLORASR($sWorkingDirectory, $sProgramPath, $sSimulationProgram)
     If (Not $sSimulationProgramPath) Or @error Then
         ThrowError("Could not set up simulation environment in folder `" & $sWorkingDirectory & "`. Batch cancelled.", 1, "BatchLORASR", @error)
@@ -106,7 +106,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
     ; Get list of input files in working directory
     LogMessage("Ready to begin processing input files.", 2, "BatchLORASR")
-    UpdateProgress("current", 100, "Ready to begin processing input files.")
+    UpdateProgress("current", 100, "Ready to begin processing input files")
     $asInputFiles = _FileListToArray($sWorkingDirectory, "*.in")
     If (UBound($asInputFiles) = 0) Or @error Then
         ThrowError("No input files found in `" & $sWorkingDirectory & "` nor in input subfolder `" & $sInputFolder & "`. Batch cancelled.", 1, "BatchLORASR", @error)

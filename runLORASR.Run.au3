@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.04
- Modified:       2017.09.05
- Version:        0.4.3.1
+ Modified:       2017.09.06
+ Version:        0.4.3.5
 
  Script Function:
     Run LORASR for a given filename
@@ -16,7 +16,7 @@
 #include "runLORASR.Functions.au3"
 
 ; Code version
-$g_sPlotsVersion = "0.4.3.1"
+$g_sRunVersion = "0.4.3.5"
 
 ; Global declarations
 Global $g_sMainWindowTitle = "LORASR PC Version"
@@ -245,20 +245,19 @@ EndFunc
 Func CancelLoadInputFile()
     LogMessage("Called `CancelLoadInputFile()`", 5)
 
-    ; Activate the correct window
-    WinActivate($g_sLoadInputFileWindowTitle)
-
     ; Error 1: invalid file name - options "OK" - send "Escape"
-    If WinActive($g_sLoadInputFileWindowTitle, "The filename is not valid") Then
-        LogMessage("Invalid filename error. Attempting to cancel.", 2, "CancelLoadInputFile")
+    If WinExists($g_sLoadInputFileWindowTitle, "OK") Then
+        LogMessage("Invalid filename error. Attempting to cancel.", 3, "CancelLoadInputFile")
+        WinActivate($g_sLoadInputFileWindowTitle, "OK")
         Sleep(50)
         Send("{ESCAPE}")
         Sleep(50)
     EndIf
 
     ; Error 2: file doesn't exist - options "Yes" or "No" to creating new file - send "N" for "No"
-    If WinActive($g_sLoadInputFileWindowTitle, "Create the file?") Then
-        LogMessage("File doesn't exist error. Attempting to cancel.", 2, "CancelLoadInputFile")
+    If WinExists($g_sLoadInputFileWindowTitle, "&No") Then
+        LogMessage("File doesn't exist error. Attempting to cancel.", 3, "CancelLoadInputFile")
+        WinActivate($g_sLoadInputFileWindowTitle, "&No")
         Sleep(50)
         Send("n")
         Sleep(50)
@@ -267,9 +266,11 @@ Func CancelLoadInputFile()
     ; Close the Load Input File dialog box
     WinClose($g_sLoadInputFileWindowTitle)
     WinClose($g_sLoadInputFileWindowTitle)
+    WinClose($g_sLoadInputFileWindowTitle)
 
     ; Kill the process if not already closed
     If WinExists($g_sLoadInputFileWindowTitle) Then
+        WinKill($g_sLoadInputFileWindowTitle)
         WinKill($g_sLoadInputFileWindowTitle)
         WinKill($g_sLoadInputFileWindowTitle)
     EndIf
@@ -279,6 +280,8 @@ Func CancelLoadInputFile()
         ThrowError("Cannot close load input file dialog.", 2, "CancelLoadInputFile")
         SetError(2)
         Return 0
+    Else
+        LogMessage("Successfully closed load input file dialog.", 5, "CancelLoadInputFile")
     EndIf
 
     ; Exit

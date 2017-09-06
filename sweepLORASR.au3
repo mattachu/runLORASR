@@ -1,7 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Res_Comment=Created by M J Easton
 #AutoIt3Wrapper_Res_Description=Create a batch of input files from a batch definition file and a template
-#AutoIt3Wrapper_Res_Fileversion=0.4.3.1
+#AutoIt3Wrapper_Res_Fileversion=0.4.3.2
 #AutoIt3Wrapper_Res_LegalCopyright=Creative Commons Attribution ShareAlike
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs ----------------------------------------------------------------------------
@@ -10,8 +10,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.05
- Modified:       2017.09.05
- Version:        0.4.3.1
+ Modified:       2017.09.06
+ Version:        0.4.3.2
 
  Script Function:
     Create a batch of input files from a batch definition file and a template
@@ -21,10 +21,11 @@
 ; Load libraries
 #include "runLORASR.Functions.au3"
 #include "runLORASR.Sweep.au3"
+#include "runLORASR.Progress.au3"
 
 ; Program version
 Global CONST $g_sProgramName = "sweepLORASR"
-Global CONST $g_sProgramVersion = "0.4.3.1"
+Global CONST $g_sProgramVersion = "0.4.3.2"
 
 ; Declarations
 Local $iResult = 0
@@ -59,6 +60,10 @@ If @WorkingDir = $sProgramPath Then
         Exit 3
     EndIf
 EndIf
+
+; Draw and show the progress meters
+DrawProgressWindow()
+$g_sProgressType = "overall"
 
 ; Call the main run function
 LogMessage("Starting preparations for parameter sweep...", 2, "sweepLORASR")

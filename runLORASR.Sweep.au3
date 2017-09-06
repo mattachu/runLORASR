@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.07
- Modified:       2017.09.05
- Version:        0.4.3.1
+ Modified:       2017.09.06
+ Version:        0.4.3.2
 
  Script Function:
     Create a batch of input files from a batch definition file and a template
@@ -13,26 +13,28 @@
 #ce ----------------------------------------------------------------------------
 
 #include-once
-#include "runLORASR.Functions.au3"
-#include "runLORASR.Results.au3"
 #include <Array.au3>
 #include <Excel.au3>
 #include <File.au3>
 #include <FileConstants.au3>
+#include "runLORASR.Functions.au3"
+#include "runLORASR.Results.au3"
+#include "runLORASR.Progress.au3"
 
 ; Code version
-$g_sSweepVersion = "0.4.3.1"
+$g_sSweepVersion = "0.4.3.2"
 
 ; Main function
 Func SweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sInputFolder = "Input")
     LogMessage("Called `SweepLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sResultsFile = " & $sResultsFile & ", $sInputFolder = " & $sInputFolder & ")`", 5)
 
     ; Declarations
-    Local $iResult = 0, $iParameter = 0
+    Local $iResult = 0, $iParameter = 0, $iParameters = 0
     Local $asParameters, $asValues
 
     ; Find sweep definition files
     LogMessage("Finding sweep definition files...", 3, "SweepLORASR")
+    UpdateProgress($g_sProgressType, 1, "Finding sweep definition files")
     $iResult = FindSweepFiles($sWorkingDirectory, $sSweepFile, $sTemplateFile, $sInputFolder)
     If (Not $iResult) Or @error Then
         LogMessage("Sweep definition files not found.", 3, "SweepLORASR")
@@ -42,6 +44,7 @@ Func SweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $
 
     ; Load parameter details
     LogMessage("Loading parameters from sweep definition...", 3, "SweepLORASR")
+    UpdateProgress($g_sProgressType, 2, "Loading parameters from sweep definition")
     $iResult = LoadSweepParameters($asParameters, $asValues, $sWorkingDirectory, $sSweepFile)
     If (Not $iResult) Or @error Then
         ThrowError("Error loading sweep parameters. Cannot build parameter sweep.", 3, "SweepLORASR", @error)
@@ -51,6 +54,7 @@ Func SweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $
 
     ; Clear up existing input files in working directory
     LogMessage("Clearing up existing input files...", 3, "SweepLORASR")
+    UpdateProgress($g_sProgressType, 3, "Clearing up existing input files")
     $iResult = DeleteInputFiles($sWorkingDirectory, $sTemplateFile)
     If (Not $iResult) Or @error Then
         ThrowError("Error while clearing up input files", 4, "SweepLORASR", @error)
@@ -60,8 +64,10 @@ Func SweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $
 
     ; Build input files for each set of parameter values
     LogMessage("Building input files for parameter sweep...", 3, "SweepLORASR")
-    For $iParameter = 0 To UBound($asParameters,1) - 1
+    $iParameters = UBound($asParameters,1) - 1
+    For $iParameter = 0 To $iParameters
         LogMessage("Parameter " & String($iParameter + 1) & " (" & $asParameters[$iParameter][0] & ")", 4, "SweepLORASR")
+        UpdateProgress($g_sProgressType, Round($iParameter/($iParameters + 2) * 100), "Parameter " & String($iParameter + 1) & " of " & $iParameters & " (" & $asParameters[$iParameter][0] & ")")
         $iResult = SweepParameter($asParameters, $asValues, $iParameter, $sWorkingDirectory, $sTemplateFile)
         If (Not $iResult) Or @error Then
             ThrowError("Error building input files. Cannot build parameter sweep.", 3, "SweepLORASR", @error)
@@ -72,6 +78,7 @@ Func SweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $
 
     ; Create results file and write headers
     LogMessage("Creating batch results output file...", 3, "SweepLORASR")
+    UpdateProgress($g_sProgressType, Round(($iParameters + 1)/($iParameters + 2) * 100), "Creating batch results output file")
     $iResult = CreateResultsFile($asParameters, $sWorkingDirectory, $sResultsFile)
     If (Not $iResult) Or @error Then
         ThrowError("Error building batch results output file.", 4, "SweepLORASR", @error)
@@ -80,6 +87,7 @@ Func SweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $
 
     ; Exit
     LogMessage("End of parameter sweep preparations.", 3, "SweepLORASR")
+    UpdateProgress($g_sProgressType, 100, "End of parameter sweep preparations")
     Return (Not @error)
 
 EndFunc

@@ -127,7 +127,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
         $tStart = _Date_Time_GetLocalTime()
         $sStart = _Date_Time_SystemTimeToDateTimeStr($tStart, 1)
         LogMessage("Start time: " & $sStart, 4, "BatchLORASR")
-        UpdateProgress("overall", Round($iCurrentInputFile/$iRuns * 100), "Run " & $iCurrentInputFile & " of " & $iRuns & ": " & $sRun)
+        UpdateProgress("overall", Round($iCurrentInputFile/($iRuns + 2) * 100), "Run " & $iCurrentInputFile & " of " & $iRuns & ": " & $sRun)
         UpdateProgress("current", 0, "")
 
         ; Call the main run function
@@ -205,6 +205,8 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
     ; Tidy up
     If $bCleanup Then
         LogMessage("Tidying up leftover files...", 2, "BatchLORASR")
+        UpdateProgress("overall", Round(($iRuns + 1)/($iRuns + 2) * 100), "Tidying up leftover files...")
+        UpdateProgress("current", 0, "")
         $iResult = TidyBatchFiles($sWorkingDirectory, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sPlotFile, $sInputFolder, $sOutputFolder, $sRunFolder)
         If (Not $iResult) Or @error Then
             LogMessage("Finished tidying with some errors.", 3, "BatchLORASR")
@@ -214,6 +216,10 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
             LogMessage("Finished tidying.", 3, "BatchLORASR")
         EndIf
     EndIf
+
+    ; End of batch
+    UpdateProgress("overall", 100, "End of batch")
+    UpdateProgress("current", 100, "")
 
     ; Exit
     Return (Not @error)

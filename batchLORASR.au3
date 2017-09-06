@@ -1,7 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Res_Comment=Created by M J Easton
 #AutoIt3Wrapper_Res_Description=Work through a batch of input files and run LORASR for each one
-#AutoIt3Wrapper_Res_Fileversion=0.4.3.10
+#AutoIt3Wrapper_Res_Fileversion=0.4.3.11
 #AutoIt3Wrapper_Res_LegalCopyright=Creative Commons Attribution ShareAlike
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs ----------------------------------------------------------------------------
@@ -11,7 +11,7 @@
  Author:         Matt Easton
  Created:        2017.07.04
  Modified:       2017.09.06
- Version:        0.4.3.10
+ Version:        0.4.3.11
 
  Script Function:
     Work through a batch of input files and run LORASR for each one
@@ -24,7 +24,7 @@
 
 ; Program version
 Global CONST $g_sProgramName = "batchLORASR"
-Global CONST $g_sProgramVersion = "0.4.3.10"
+Global CONST $g_sProgramVersion = "0.4.3.11"
 
 ; Declarations
 Local $iResult = 0

@@ -60,9 +60,6 @@ If @WorkingDir = $sProgramPath Then
     EndIf
 EndIf
 
-; Copy sweep files if in subfolder
-LogMessage("Checking subfolders...", 2, "sweepLORASR")
-
 ; Call the main run function
 LogMessage("Starting preparations for parameter sweep...", 2, "sweepLORASR")
 $iResult = SweepLORASR(@WorkingDir, $sSweepFile, $sTemplateFile, $sResultsFile, $sInputFolder)

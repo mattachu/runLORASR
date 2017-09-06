@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.08.08
  Modified:       2017.09.06
- Version:        0.4.3.2
+ Version:        0.4.3.3
 
  Script Function:
     Work through a batch of input files and run LORASR for each one
@@ -25,7 +25,7 @@
 #include "runLORASR.Tidy.au3"
 
 ; Code version
-$g_sBatchVersion = "0.4.3.2"
+$g_sBatchVersion = "0.4.3.3"
 
 ; Main function
 Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program Files (x86)\LORASR", $sSimulationProgram = "LORASR.exe", $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sPlotFile = "Plots.xlsx", $sInputFolder = "Input", $sOutputFolder = "Output", $sRunFolder = "Runs", $sIncompleteFolder = "Incomplete", $bCleanup = True)
@@ -131,6 +131,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
         UpdateProgress("current", 0, "")
 
         ; Call the main run function
+        UpdateProgress("current", 20, "Running LORASR simulation")
         $iResult = RunLORASR($sRun, $sWorkingDirectory, $sSimulationProgramPath, $sInputFolder)
         $tEnd = _Date_Time_GetLocalTime()
         $sEnd = _Date_Time_SystemTimeToDateTimeStr($tEnd, 1)
@@ -142,7 +143,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
         ; Try once more if failed
         If Not ($iResult = 1) Then
             LogMessage("Starting run *" & $sRun & "* again...", 2, "BatchLORASR")
-            UpdateProgress("current", 20, "Running LORASR simulation")
+            UpdateProgress("current", 30, "Re-rnning LORASR simulation")
             $iResult = RunLORASR($sRun, $sWorkingDirectory, $sSimulationProgramPath, $sInputFolder)
             LogMessage("Result for re-run *" & $sRun & ":* " & $iResult, 2, "BatchLORASR")
             $tEnd = _Date_Time_GetLocalTime()
@@ -159,7 +160,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
         ; Save run results to output file
         LogMessage("Saving summary results for run *" & $sRun & "* to batch results output file...", 2, "BatchLORASR")
-        UpdateProgress("current", 60, "Saving summary results")
+        UpdateProgress("current", 50, "Saving summary results")
         $iResult = SaveRunResults($sRun, $sWorkingDirectory, $sResultsFile)
         If (Not $iResult) Or @error Then
             ; Log failure and continue

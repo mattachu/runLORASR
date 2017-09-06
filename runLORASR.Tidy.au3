@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.13
- Modified:       2017.09.05
- Version:        0.4.3.1
+ Modified:       2017.09.06
+ Version:        0.4.3.2
 
  Script Function:
     Tidy up files from a batch run of LORASR
@@ -14,9 +14,10 @@
 
 #include-once
 #include "runLORASR.Functions.au3"
+#include "runLORASR.Progress.au3"
 
 ; Code version
-$g_sTidyVersion = "0.4.3.1"
+$g_sTidyVersion = "0.4.3.2"
 
 ; Tidy up files from an incomplete run
 Func TidyIncompleteRun($sRun, $sWorkingDirectory = @WorkingDir, $sIncompleteFolder = "Incomplete")
@@ -105,7 +106,7 @@ Func TidyAllRunFiles($sWorkingDirectory = @WorkingDir, $sInputFolder = "Input", 
     ; Declarations
     Local $sRun = ""
     Local $asInputFiles
-    Local $iCurrentInputFile = 0, $iResult = 0
+    Local $iInputFiles = 0, $iCurrentInputFile = 0, $iResult = 0
 
     ; Get list of input files in working directory
     $asInputFiles = _FileListToArray(@WorkingDir, "*.in")
@@ -131,7 +132,8 @@ Func TidyAllRunFiles($sWorkingDirectory = @WorkingDir, $sInputFolder = "Input", 
         Return 1
     Else
         ; Run through each input file sequentially
-        For $iCurrentInputFile = 1 To UBound($asInputFiles) - 1
+        $iInputFiles = UBound($asInputFiles) - 1
+        For $iCurrentInputFile = 1 To $iInputFiles
 
             ; Strip file extension ".in" from run name
             $sRun = StringTrimRight($asInputFiles[$iCurrentInputFile], 3)
@@ -140,6 +142,9 @@ Func TidyAllRunFiles($sWorkingDirectory = @WorkingDir, $sInputFolder = "Input", 
                 SetError(2)
                 ContinueLoop
             EndIf
+
+            ; Update progress meters
+            UpdateProgress($g_sProgressType, Round($iCurrentInputFile/($iInputFiles + 2) * 100), "Run " & $iCurrentInputFile & " of " & $iInputFiles & ": " & $sRun)
 
             ; Tidy up files for this run
             $iResult = TidyRunFiles($sRun, $sWorkingDirectory, $sInputFolder, $sIncompleteFolder)

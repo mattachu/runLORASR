@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.04
  Modified:       2017.09.06
- Version:        0.4.3.4
+ Version:        0.4.3.5
 
  Script Function:
     Run LORASR for a given filename
@@ -16,7 +16,7 @@
 #include "runLORASR.Functions.au3"
 
 ; Code version
-$g_sRunVersion = "0.4.3.4"
+$g_sRunVersion = "0.4.3.5"
 
 ; Global declarations
 Global $g_sMainWindowTitle = "LORASR PC Version"
@@ -247,7 +247,7 @@ Func CancelLoadInputFile()
 
     ; Error 1: invalid file name - options "OK" - send "Escape"
     If WinExists($g_sLoadInputFileWindowTitle, "OK") Then
-        LogMessage("Invalid filename error. Attempting to cancel.", 2, "CancelLoadInputFile")
+        LogMessage("Invalid filename error. Attempting to cancel.", 3, "CancelLoadInputFile")
         WinActivate($g_sLoadInputFileWindowTitle, "OK")
         Sleep(50)
         Send("{ESCAPE}")
@@ -256,7 +256,7 @@ Func CancelLoadInputFile()
 
     ; Error 2: file doesn't exist - options "Yes" or "No" to creating new file - send "N" for "No"
     If WinExists($g_sLoadInputFileWindowTitle, "&No") Then
-        LogMessage("File doesn't exist error. Attempting to cancel.", 2, "CancelLoadInputFile")
+        LogMessage("File doesn't exist error. Attempting to cancel.", 3, "CancelLoadInputFile")
         WinActivate($g_sLoadInputFileWindowTitle, "&No")
         Sleep(50)
         Send("n")
@@ -280,6 +280,8 @@ Func CancelLoadInputFile()
         ThrowError("Cannot close load input file dialog.", 2, "CancelLoadInputFile")
         SetError(2)
         Return 0
+    Else
+        LogMessage("Successfully closed load input file dialog.", 5, "CancelLoadInputFile")
     EndIf
 
     ; Exit

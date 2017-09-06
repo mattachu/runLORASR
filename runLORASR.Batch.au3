@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.08
- Modified:       2017.09.05
- Version:        0.4.3.1
+ Modified:       2017.09.06
+ Version:        0.4.3.2
 
  Script Function:
     Work through a batch of input files and run LORASR for each one
@@ -21,21 +21,26 @@
 #include "runLORASR.Run.au3"
 #include "runLORASR.Results.au3"
 #include "runLORASR.Plots.au3"
+#include "runLORASR.Progress.au3"
 #include "runLORASR.Tidy.au3"
 
 ; Code version
-$g_sBatchVersion = "0.4.3.1"
+$g_sBatchVersion = "0.4.3.2"
 
 ; Main function
 Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program Files (x86)\LORASR", $sSimulationProgram = "LORASR.exe", $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sPlotFile = "Plots.xlsx", $sInputFolder = "Input", $sOutputFolder = "Output", $sRunFolder = "Runs", $sIncompleteFolder = "Incomplete", $bCleanup = True)
     LogMessage("Called `BatchLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sProgramPath = " & $sProgramPath & ", $sSimulationProgram = " & $sSimulationProgram & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sResultsFile = " & $sResultsFile & ", $sPlotFile = " & $sPlotFile & ", $sInputFolder = " & $sInputFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ", $sIncompleteFolder = " & $sIncompleteFolder & ", $bCleanup = " & $bCleanup & ")`", 5)
 
     ; Declarations
-    Local $iResult = 0, $iCurrentInputFile = 0
+    Local $iResult = 0, $iRuns = 0, $iCurrentInputFile = 0
     Local $bCreateResultsFile = True
     Local $sRun = "", $sSimulationProgramPath = "", $sStart = "", $sEnd = ""
     Local $asInputFiles
     Local $tStart, $tEnd
+
+    ; Draw and show the progress window
+    DrawProgressWindow()
+    UpdateProgress("overall", 0, "Initializing...")
 
     ; Switch to working directory
     FileChangeDir($sWorkingDirectory)
@@ -47,6 +52,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
     ; Copy input files to working directory
     LogMessage("Finding input files...", 2, "BatchLORASR")
+    UpdateProgress("current", 20, "Finding input files...")
     $iResult = FindInputFiles($sWorkingDirectory, $sInputFolder, $sSweepFile, $sTemplateFile, $sPlotFile, $sProgramPath)
     If (Not $iResult) Or @error Then
         ; Errors at this stage may not stop the batch from running, but should be noted.
@@ -57,6 +63,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
     ; Try to set up parameter sweep
     LogMessage("Loading parameter sweep definition...", 2, "BatchLORASR")
+    UpdateProgress("current", 40, "Loading parameter sweep definition...")
     If RunSweepLORASR($sWorkingDirectory, $sSweepFile, $sTemplateFile, $sResultsFile, $sInputFolder) Then
         ; If parameter sweep preparations were successful, the results file should already be created, so don't create it again.
         $bCreateResultsFile = False
@@ -75,6 +82,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
     ; Create results file unless already created by sweep program
     If $bCreateResultsFile Then
         LogMessage("Creating batch results output file...", 2, "BatchLORASR")
+        UpdateProgress("current", 60, "Creating batch results output file...")
         $iResult = CreateResultsFile(0, $sWorkingDirectory, $sResultsFile)
         If (Not $iResult) Or @error Then
             ; Write failed
@@ -88,6 +96,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
     ; Set up for first run
     LogMessage("Setting up simulation environment...", 2, "BatchLORASR")
+    UpdateProgress("current", 80, "Setting up simulation environment...")
     $sSimulationProgramPath = SetupLORASR($sWorkingDirectory, $sProgramPath, $sSimulationProgram)
     If (Not $sSimulationProgramPath) Or @error Then
         ThrowError("Could not set up simulation environment in folder `" & $sWorkingDirectory & "`. Batch cancelled.", 1, "BatchLORASR", @error)
@@ -97,6 +106,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
     ; Get list of input files in working directory
     LogMessage("Ready to begin processing input files.", 2, "BatchLORASR")
+    UpdateProgress("current", 100, "Ready to begin processing input files.")
     $asInputFiles = _FileListToArray($sWorkingDirectory, "*.in")
     If (UBound($asInputFiles) = 0) Or @error Then
         ThrowError("No input files found in `" & $sWorkingDirectory & "` nor in input subfolder `" & $sInputFolder & "`. Batch cancelled.", 1, "BatchLORASR", @error)
@@ -106,7 +116,8 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
 
     ; ---------------------------------------------------------------------------------
     ; Run process for each input file sequentially
-    For $iCurrentInputFile = 1 To UBound($asInputFiles) - 1
+    $iRuns = UBound($asInputFiles) - 1
+    For $iCurrentInputFile = 1 To $iRuns
 
         ; Define run name by stripping file extension ".in" from input file
         $sRun = StringTrimRight($asInputFiles[$iCurrentInputFile], 3)
@@ -116,6 +127,8 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
         $tStart = _Date_Time_GetLocalTime()
         $sStart = _Date_Time_SystemTimeToDateTimeStr($tStart, 1)
         LogMessage("Start time: " & $sStart, 4, "BatchLORASR")
+        UpdateProgress("overall", Round($iCurrentInputFile/$iRuns * 100), "Run " & $iCurrentInputFile & " of " & $iRuns & ": " & $sRun)
+        UpdateProgress("current", 0, "")
 
         ; Call the main run function
         $iResult = RunLORASR($sRun, $sWorkingDirectory, $sSimulationProgramPath, $sInputFolder)

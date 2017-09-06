@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.04
  Modified:       2017.09.06
- Version:        0.4.3.3
+ Version:        0.4.3.4
 
  Script Function:
     Run LORASR for a given filename
@@ -16,7 +16,7 @@
 #include "runLORASR.Functions.au3"
 
 ; Code version
-$g_sRunVersion = "0.4.3.3"
+$g_sRunVersion = "0.4.3.4"
 
 ; Global declarations
 Global $g_sMainWindowTitle = "LORASR PC Version"
@@ -246,18 +246,18 @@ Func CancelLoadInputFile()
     LogMessage("Called `CancelLoadInputFile()`", 5)
 
     ; Error 1: invalid file name - options "OK" - send "Escape"
-    If WinExists($g_sLoadInputFileWindowTitle, "The filename is not valid") Then
+    If WinExists($g_sLoadInputFileWindowTitle, "OK") Then
         LogMessage("Invalid filename error. Attempting to cancel.", 2, "CancelLoadInputFile")
-        WinActivate($g_sLoadInputFileWindowTitle, "The filename is not valid")
+        WinActivate($g_sLoadInputFileWindowTitle, "OK")
         Sleep(50)
         Send("{ESCAPE}")
         Sleep(50)
     EndIf
 
     ; Error 2: file doesn't exist - options "Yes" or "No" to creating new file - send "N" for "No"
-    If WinExists($g_sLoadInputFileWindowTitle, "Create the file?") Then
+    If WinExists($g_sLoadInputFileWindowTitle, "&No") Then
         LogMessage("File doesn't exist error. Attempting to cancel.", 2, "CancelLoadInputFile")
-        WinActivate($g_sLoadInputFileWindowTitle, "Create the file?")
+        WinActivate($g_sLoadInputFileWindowTitle, "&No")
         Sleep(50)
         Send("n")
         Sleep(50)

@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.07.13
  Modified:       2017.09.08
- Version:        0.4.3.2
+ Version:        0.4.4.0
 
  Script Function:
     Copy data from LORASR output files to Excel plotting spreadsheet
@@ -18,7 +18,7 @@
 #include <Date.au3>
 
 ; Code version
-$g_sPlotsVersion = "0.4.3.2"
+$g_sPlotsVersion = "0.4.4.0"
 
 ; Function that defines input and output settings for each data type: changes to the LORASR code may require changes here.
 Func GetFileSettings($sDataType, ByRef $sDataFile1, ByRef $iDataStart1, ByRef $iDataEnd1, ByRef $sDataFile2, ByRef $iDataStart2, ByRef $iDataEnd2, ByRef $iWorksheet, ByRef $sDataLocation1, ByRef $sDataLocation2)

@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.04
- Modified:       2017.09.06
- Version:        0.4.3.5
+ Modified:       2017.09.08
+ Version:        0.4.4.0
 
  Script Function:
     Run LORASR for a given filename
@@ -16,7 +16,7 @@
 #include "runLORASR.Functions.au3"
 
 ; Code version
-$g_sRunVersion = "0.4.3.5"
+$g_sRunVersion = "0.4.4.0"
 
 ; Global declarations
 Global $g_sMainWindowTitle = "LORASR PC Version"

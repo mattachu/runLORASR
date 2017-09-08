@@ -1,7 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Res_Comment=Created by M J Easton
 #AutoIt3Wrapper_Res_Description=Run LORASR for a given filename
-#AutoIt3Wrapper_Res_Fileversion=0.4.3.1
+#AutoIt3Wrapper_Res_Fileversion=0.4.4.0
 #AutoIt3Wrapper_Res_LegalCopyright=Creative Commons Attribution ShareAlike
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs ----------------------------------------------------------------------------
@@ -10,8 +10,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.04
- Modified:       2017.09.05
- Version:        0.4.3.1
+ Modified:       2017.09.08
+ Version:        0.4.4.0
 
  Script Function:
     Run LORASR for a given filename
@@ -24,7 +24,7 @@
 
 ; Program version
 Global CONST $g_sProgramName = "runLORASR"
-Global CONST $g_sProgramVersion = "0.4.3.1"
+Global CONST $g_sProgramVersion = "0.4.4.0"
 
 ; Declarations
 Local $iResult = 0

@@ -5,7 +5,7 @@
  Author:         Matt Easton
  Created:        2017.08.08
  Modified:       2017.09.08
- Version:        0.4.4.0
+ Version:        0.4.4.1
 
  Script Function:
     Work through a batch of input files and run LORASR for each one
@@ -25,16 +25,16 @@
 #include "runLORASR.Tidy.au3"
 
 ; Code version
-$g_sBatchVersion = "0.4.4.0"
+$g_sBatchVersion = "0.4.4.1"
 
 ; Main function
 Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program Files (x86)\LORASR", $sSimulationProgram = "LORASR.exe", $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sPlotFile = "Plots.xlsx", $sInputFolder = "Input", $sOutputFolder = "Output", $sRunFolder = "Runs", $sIncompleteFolder = "Incomplete", $bCleanup = True)
     LogMessage("Called `BatchLORASR($sWorkingDirectory = " & $sWorkingDirectory & ", $sProgramPath = " & $sProgramPath & ", $sSimulationProgram = " & $sSimulationProgram & ", $sSweepFile = " & $sSweepFile & ", $sTemplateFile = " & $sTemplateFile & ", $sResultsFile = " & $sResultsFile & ", $sPlotFile = " & $sPlotFile & ", $sInputFolder = " & $sInputFolder & ", $sOutputFolder = " & $sOutputFolder & ", $sRunFolder = " & $sRunFolder & ", $sIncompleteFolder = " & $sIncompleteFolder & ", $bCleanup = " & $bCleanup & ")`", 5)
 
     ; Declarations
-    Local $iResult = 0, $iRuns = 0, $iCurrentInputFile = 0
+    Local $iResult = 0, $iRuns = 0, $iSuccessfulRuns = 0, $iFailedRuns = 0, $iCurrentInputFile = 0
     Local $bCreateResultsFile = True
-    Local $sRun = "", $sSimulationProgramPath = "", $sStart = "", $sEnd = ""
+    Local $sRun = "", $sSimulationProgramPath = "", $sStart = "", $sEnd = "", $sResult = ""
     Local $asInputFiles
     Local $tStart, $tEnd
 
@@ -151,6 +151,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
             LogMessage("Current time: " & $sEnd, 4, "BatchLORASR")
             If Not ($iResult = 1) Then
                 ; Log failure and continue
+                $iFailedRuns += 1
                 ThrowError("Run " & $sRun & " failed, attempting to continue with batch.", 2, "BatchLORASR", @error)
                 TidyIncompleteRun($sRun, $sWorkingDirectory, $sIncompleteFolder)
                 SetError(0)
@@ -164,6 +165,7 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
         $iResult = SaveRunResults($sRun, $sWorkingDirectory, $sResultsFile)
         If (Not $iResult) Or @error Then
             ; Log failure and continue
+            $iFailedRuns += 1
             ThrowError("Error saving run " & $sRun & " to batch results output file.", 2, "BatchLORASR", @error)
             TidyIncompleteRun($sRun, $sWorkingDirectory, $sIncompleteFolder)
             SetError(0)
@@ -176,11 +178,15 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
         $iResult = PlotLORASR($sWorkingDirectory, $sRun & ".xlsx", $sPlotFile, $sProgramPath)
         If (Not $iResult) Or @error Then
             ; Log failure and continue
+            $iFailedRuns += 1
             ThrowError("Error saving run " & $sRun & " to plots spreadsheet.", 2, "BatchLORASR", @error)
             TidyIncompleteRun($sRun, $sWorkingDirectory, $sIncompleteFolder)
             SetError(0)
             ContinueLoop
         EndIf
+
+        ; One more successful run
+        $iSuccessfulRuns += 1
 
         ; Tidy up
         If $bCleanup Then
@@ -223,12 +229,15 @@ Func BatchLORASR($sWorkingDirectory = @WorkingDir, $sProgramPath = "C:\Program F
         EndIf
     EndIf
 
+    ; Results
+    $sResult = String($iRuns) & " runs attempted, " & String($iSuccessfulRuns) & " successful, " & String($iFailedRuns) & " failed."
+
     ; End of batch
     UpdateProgress("overall", 100, "End of batch")
-    UpdateProgress("current", 100, "")
+    UpdateProgress("current", 100, $sResult)
 
     ; Exit
-    Return (Not @error)
+    Return $sResult
 
 EndFunc
 

@@ -1,7 +1,7 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Res_Comment=Created by M J Easton
 #AutoIt3Wrapper_Res_Description=Work through a batch of input files and run LORASR for each one
-#AutoIt3Wrapper_Res_Fileversion=0.4.4.0
+#AutoIt3Wrapper_Res_Fileversion=0.4.4.1
 #AutoIt3Wrapper_Res_LegalCopyright=Creative Commons Attribution ShareAlike
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs ----------------------------------------------------------------------------
@@ -11,7 +11,7 @@
  Author:         Matt Easton
  Created:        2017.07.04
  Modified:       2017.09.08
- Version:        0.4.4.0
+ Version:        0.4.4.1
 
  Script Function:
     Work through a batch of input files and run LORASR for each one
@@ -24,10 +24,10 @@
 
 ; Program version
 Global CONST $g_sProgramName = "batchLORASR"
-Global CONST $g_sProgramVersion = "0.4.4.0"
+Global CONST $g_sProgramVersion = "0.4.4.1"
 
 ; Declarations
-Local $iResult = 0
+Local $vResult = 0
 Local $sNewFolder = ""
 
 ; Create log file
@@ -39,8 +39,8 @@ LogVersions($g_sProgramName, $g_sProgramVersion)
 LogMessage("Loading global settings...", 2, "batchLORASR")
 Local $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResultsFile, $sPlotFile, $sInputFolder, $sOutputFolder, $sRunFolder, $sIncompleteFolder
 Local $bCleanup
-$iResult = GetSettings(@WorkingDir, $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResultsFile, $sPlotFile, $sInputFolder, $sOutputFolder, $sRunFolder, $sIncompleteFolder, $bCleanup)
-If (Not $iResult) Or @error Then
+$vResult = GetSettings(@WorkingDir, $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResultsFile, $sPlotFile, $sInputFolder, $sOutputFolder, $sRunFolder, $sIncompleteFolder, $bCleanup)
+If (Not $vResult) Or @error Then
     ThrowError("Error loading global settings", 1, "batchLORASR")
     Exit 2
 EndIf
@@ -63,13 +63,13 @@ LogMessage("Running batch in working folder `" & @WorkingDir & "`", 3,  "batchLO
 
 ; Call the main run function
 LogMessage("Calling main batch function.", 2, "batchLORASR")
-$iResult = BatchLORASR(@WorkingDir, $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResultsFile, $sPlotFile, $sInputFolder, $sOutputFolder, $sRunFolder, $sIncompleteFolder, $bCleanup)
+$vResult = BatchLORASR(@WorkingDir, $sProgramPath, $sSimulationProgram, $sSweepFile, $sTemplateFile, $sResultsFile, $sPlotFile, $sInputFolder, $sOutputFolder, $sRunFolder, $sIncompleteFolder, $bCleanup)
 
 ; Exit program
-If ($iResult = 1) And (Not @error) Then
-    LogMessage("Batch complete.", 1, "batchLORASR")
+If ($vResult) And (Not @error) Then
+    LogMessage("Batch complete." & @CRLF & $vResult, 1, "batchLORASR")
     Exit 0
 Else
-    LogMessage("Batch incomplete.", 1, "batchLORASR")
+    LogMessage("Batch completed with errors.", 1, "batchLORASR")
     Exit 1
 EndIf

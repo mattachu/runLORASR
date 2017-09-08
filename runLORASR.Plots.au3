@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.13
- Modified:       2017.09.05
- Version:        0.4.3.1
+ Modified:       2017.09.08
+ Version:        0.4.3.2
 
  Script Function:
     Copy data from LORASR output files to Excel plotting spreadsheet
@@ -18,7 +18,7 @@
 #include <Date.au3>
 
 ; Code version
-$g_sPlotsVersion = "0.4.3.1"
+$g_sPlotsVersion = "0.4.3.2"
 
 ; Function that defines input and output settings for each data type: changes to the LORASR code may require changes here.
 Func GetFileSettings($sDataType, ByRef $sDataFile1, ByRef $iDataStart1, ByRef $iDataEnd1, ByRef $sDataFile2, ByRef $iDataStart2, ByRef $iDataEnd2, ByRef $iWorksheet, ByRef $sDataLocation1, ByRef $sDataLocation2)
@@ -170,7 +170,15 @@ Func PlotLORASR($sWorkingDirectory = @WorkingDir, $sPlotFile = "Plots.xlsx", $sM
     $iResult = PlotAllData($oWorkbook, $sWorkingDirectory)
     If (Not $iResult) Or @error Then
         ThrowError("Error " & @error & " while plotting, attempting to save and close plot spreadsheet.", 3, "PlotLORASR", @error)
+        ; Attempt to save and close anyway
+        $iResult = SaveAndClosePlotSpreadsheet($oExcel, $oWorkbook)
+        If (Not $iResult) Or @error Then
+            ThrowError("Could not save and close Excel workbook.", 2, "PlotLORASR", @error)
+            SetError(5)
+            Return 0
+        EndIf
         SetError(3)
+        Return 0
     EndIf
 
     ; Save and close the spreadsheet

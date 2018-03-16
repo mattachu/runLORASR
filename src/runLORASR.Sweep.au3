@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.07
- Modified:       2017.09.08
- Version:        0.4.4.0
+ Modified:       2018.03.16
+ Version:        0.4.5.0
 
  Script Function:
     Create a batch of input files from a batch definition file and a template
@@ -22,7 +22,7 @@
 #include "runLORASR.Progress.au3"
 
 ; Code version
-$g_sSweepVersion = "0.4.4.0"
+$g_sSweepVersion = "0.4.5.0"
 
 ; Main function
 Func SweepLORASR($sWorkingDirectory = @WorkingDir, $sSweepFile = "Sweep.xlsx", $sTemplateFile = "Template.txt", $sResultsFile = "Batch results.csv", $sInputFolder = "Input")

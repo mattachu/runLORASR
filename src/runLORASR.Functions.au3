@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.12
- Modified:       2017.09.08
- Version:        0.4.4.0
+ Modified:       2018.03.16
+ Version:        0.4.5.0
 
  Script Function:
     Functions used by runLORASR
@@ -22,7 +22,7 @@
 Global CONST $g_tProgramRunTime = _Date_Time_GetLocalTime()
 
 ; Code versions (modified by each loaded library or executable)
-Global CONST $g_sFunctionsVersion = "0.4.4.0"
+Global CONST $g_sFunctionsVersion = "0.4.5.0"
 Global $g_sRunVersion = ""
 Global $g_sPlotsVersion = ""
 Global $g_sBatchVersion = ""

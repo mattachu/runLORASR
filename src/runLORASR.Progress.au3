@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.09.06
- Modified:       2017.09.08
- Version:        0.4.4.0
+ Modified:       2018.03.16
+ Version:        0.4.5.0
 
  Script Function:
     Show progress meters for the runLORASR batch process
@@ -21,7 +21,7 @@
 #include "runLORASR.Functions.au3"
 
 ; Code version
-$g_sProgressVersion = "0.4.4.0"
+$g_sProgressVersion = "0.4.5.0"
 
 ; Handles of controls are global to allow updating at different stages of different processes
 Global $g_hProgressWindow = 0, $g_hOverallProgressBar = 0, $g_hOverallProgressDetailLabel = 0, $g_hCurrentProgressBar = 0, $g_hCurrentProgressDetailLabel = 0

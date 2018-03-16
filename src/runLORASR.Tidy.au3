@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.07.13
- Modified:       2017.09.08
- Version:        0.4.4.0
+ Modified:       2018.03.16
+ Version:        0.4.5.0
 
  Script Function:
     Tidy up files from a batch run of LORASR
@@ -17,7 +17,7 @@
 #include "runLORASR.Progress.au3"
 
 ; Code version
-$g_sTidyVersion = "0.4.4.0"
+$g_sTidyVersion = "0.4.5.0"
 
 ; Tidy up files from an incomplete run
 Func TidyIncompleteRun($sRun, $sWorkingDirectory = @WorkingDir, $sIncompleteFolder = "Incomplete")

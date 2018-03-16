@@ -4,8 +4,8 @@
  AutoIt Version: 3.3.14.2
  Author:         Matt Easton
  Created:        2017.08.25
- Modified:       2017.09.08
- Version:        0.4.4.0
+ Modified:       2018.03.16
+ Version:        0.4.5.0
 
  Script Function:
     Extract transmission results from LORASR output files
@@ -20,7 +20,7 @@
 #include "runLORASR.Functions.au3"
 
 ; Code version
-$g_sResultsVersion = "0.4.4.0"
+$g_sResultsVersion = "0.4.5.0"
 
 ; Function to loop through all output files and save results
 Func SaveAllResults($sWorkingDirectory = @WorkingDir, $sResultsFile = "Batch results.csv", $sInputFolder = "Input", $sRunFolder = "Runs")
